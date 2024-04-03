@@ -2,10 +2,15 @@ package com.example.tarickalia
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.tarickalia.bd.usuaris.AppDatabase
 import com.example.tarickalia.databinding.ActivityMainBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity() {
@@ -18,6 +23,30 @@ class MainActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        binding.login.setOnClickListener() {
+            val username = binding.editTextTextEmailAddress.text.toString()
+            val password = binding.editTextTextPassword.text.toString()
+
+            val userDao = AppDatabase.getDatabase(this).usuarisDao()
+            GlobalScope.launch(Dispatchers.IO) {
+                val user = userDao.findByUsername(username)
+
+                if (user != null && user.contrasenya == password) {
+                    if (user.admin) {
+                        val intent = Intent(this@MainActivity, HomePares::class.java)
+                        intent.putExtra("username", user.usuari)
+                        startActivity(intent)
+                    } else {
+
+                    }
+                } else {
+                    launch(Dispatchers.Main) {
+                        Toast.makeText(this@MainActivity, "Usuari o contrasenya incorrecta", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
 
         binding.register.setOnClickListener() {

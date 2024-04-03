@@ -48,6 +48,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="100dp"
         android:ems="10"
+        android:hint="Nom Usuari"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sigin" />
@@ -59,6 +60,7 @@
         android:layout_marginTop="4dp"
         android:layout_marginEnd="100dp"
         android:ems="10"
+        android:hint="Password"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
 
@@ -72,7 +74,7 @@
         android:layout_marginTop="16dp"
         android:text="Register"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.668"
+        app:layout_constraintHorizontal_bias="0.642"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
 
@@ -84,7 +86,7 @@
         android:layout_marginTop="16dp"
         android:text="Login"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.315"
+        app:layout_constraintHorizontal_bias="0.284"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
 

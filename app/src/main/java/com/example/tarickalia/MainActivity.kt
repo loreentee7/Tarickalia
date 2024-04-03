@@ -39,6 +39,9 @@ class MainActivity : AppCompatActivity() {
                         intent.putExtra("username", user.usuari)
                         startActivity(intent)
                     } else {
+                        val intent = Intent(this@MainActivity, HomeFIlls::class.java)
+                        intent.putExtra("username", user.usuari)
+                        startActivity(intent)
 
                     }
                 } else {

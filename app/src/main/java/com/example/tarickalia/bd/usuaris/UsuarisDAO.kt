@@ -12,4 +12,7 @@ interface UsuarisDao {
 
     @Query("SELECT * FROM Usuaris WHERE usuari = :username")
     suspend fun findByUsername(username: String): Usuaris?
+
+    @Query("SELECT * FROM Usuaris")
+    suspend fun getAll(): List<Usuaris>
 }

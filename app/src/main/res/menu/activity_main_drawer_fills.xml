@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/Tasques"
+            android:title="Tasques a Realitzar" />
+        <item
+            android:id="@+id/TasquesCompletes"
+            android:title="Tasques Completades" />
+        <item
+            android:id="@+id/Recompenses"
+            android:title="Recompenses" />
+        <item
+            android:id="@+id/Puntuacions"
+            android:title="Puntuacions" />
+    </group>
+</menu>

@@ -10,7 +10,7 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".HomePares">
+        tools:context=".HomeFIlls">
 
 
 
@@ -59,10 +59,10 @@
             app:tint="@color/white"/>
 
         <TextView
-            android:id="@+id/homepares"
+            android:id="@+id/homefills"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Home Pares"
+            android:text="Home Fills"
             android:textColor="@color/white"
             android:fontFamily="@font/adlam"
             android:textSize="30sp"
@@ -75,10 +75,10 @@
             app:layout_constraintVertical_bias="0.023" />
 
         <TextView
-            android:id="@+id/nompares"
+            android:id="@+id/nomfill"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nom Pare"
+            android:text="Nom Fill"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -98,44 +98,46 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.19" />
+            app:layout_constraintVertical_bias="0.244" />
 
         <Button
-            android:id="@+id/btnGestioFamilia"
+            android:id="@+id/btntasques"
             android:layout_width="130dp"
             android:layout_height="125dp"
-            android:text="Gestió de Familia"
+            android:text="Tasques"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.74"
+            app:layout_constraintHorizontal_bias="0.241"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.278" />
+            app:layout_constraintVertical_bias="0.377" />
+
+        <Button
+            android:id="@+id/btntasquescompletes"
+            android:layout_width="130dp"
+            android:layout_height="125dp"
+            android:text="Tasques completes"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.743"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.377" />
 
         <Button
             android:id="@+id/btnRecompenses"
             android:layout_width="130dp"
             android:layout_height="125dp"
-            android:text="Crear Recompenses"
+            android:text="Recompenses"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.241"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.278" />
-
-        <Button
-            android:id="@+id/btnTasca"
-            android:layout_width="130dp"
-            android:layout_height="125dp"
-            android:text="Crear Tasca"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.241"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintVertical_bias="0.595" />
 
         <Button
             android:id="@+id/btnPuntuacions"
@@ -144,21 +146,10 @@
             android:text="Puntuacions"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.74"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/btnTasquesCompletes"
-            android:layout_width="130dp"
-            android:layout_height="125dp"
-            android:text="Tasques Completes"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintHorizontal_bias="0.743"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.706" />
+            app:layout_constraintVertical_bias="0.595" />
 
         <ImageView
             android:layout_width="211dp"
@@ -176,9 +167,9 @@
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_gravity="start"
         android:background="@color/purple"
         app:itemTextColor="@color/white"
-        android:layout_gravity="start"
-        app:menu="@menu/activity_main_drawer" />
+        app:menu="@menu/activity_main_drawer_fills" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

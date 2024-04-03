@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/GestioFills"
+            android:title="Gestio de Fills" />
+        <item
+            android:id="@+id/CreacioTasca"
+            android:title="Creació de Tasques" />
+        <item
+            android:id="@+id/CreacioRecompenses"
+            android:title="Creació de Recompenses" />
+        <item
+            android:id="@+id/Puntuacions"
+            android:title="Puntuacions" />
+        <item
+            android:id="@+id/TasquesCompletes"
+            android:title="Tasques Completes    " />
+    </group>
+</menu>

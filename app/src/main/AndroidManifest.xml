@@ -15,6 +15,9 @@
         android:theme="@style/Theme.Tarickalia"
         tools:targetApi="31">
         <activity
+            android:name=".CreacioTasques"
+            android:exported="false" />
+        <activity
             android:name=".GestioFamilia"
             android:exported="false" />
         <activity

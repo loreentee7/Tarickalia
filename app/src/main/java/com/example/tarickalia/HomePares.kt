@@ -41,8 +41,9 @@ class HomePares : AppCompatActivity() {
         }
 
         binding.btnTasca.setOnClickListener {
-            //val intent = Intent(this, CreacioTasques::class.java)
-            //startActivity(intent)
+            val intent = Intent(this, CreacioTasques::class.java)
+            intent.putExtra("username", binding.nompares.text.toString())
+            startActivity(intent)
         }
 
         binding.btnTasquesCompletes.setOnClickListener {

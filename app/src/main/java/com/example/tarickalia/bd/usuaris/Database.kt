@@ -8,12 +8,15 @@ import androidx.room.TypeConverters
 import com.example.tarickalia.familia.Converters
 import com.example.tarickalia.familia.Familia
 import com.example.tarickalia.familia.FamiliaDao
+import com.example.tarickalia.tasques.Tasques
+import com.example.tarickalia.tasques.TasquesDao
 
-@Database(entities = [Usuaris::class, Familia::class],  version = 2)
+@Database(entities = [Usuaris::class, Familia::class, Tasques::class],  version = 3)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun usuarisDao(): UsuarisDao
     abstract fun familiaDao(): FamiliaDao
+    abstract fun tasquesDao(): TasquesDao
 
     companion object {
         @Volatile

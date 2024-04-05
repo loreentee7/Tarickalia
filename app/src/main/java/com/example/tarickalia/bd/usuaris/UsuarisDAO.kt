@@ -15,4 +15,7 @@ interface UsuarisDao {
 
     @Query("SELECT * FROM Usuaris")
     suspend fun getAll(): List<Usuaris>
+
+    @Query("SELECT * FROM Usuaris WHERE admin = 1")
+    suspend fun getAllAdmins(): List<Usuaris>
 }

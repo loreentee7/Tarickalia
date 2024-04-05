@@ -11,6 +11,9 @@ interface FamiliaDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(familia: Familia)
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun create(familia: Familia)
+
     @Query("SELECT * FROM Familia WHERE nombre = :nombre")
     suspend fun findByName(nombre: String): Familia?
 

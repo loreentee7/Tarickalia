@@ -2,6 +2,7 @@ package com.example.tarickalia
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
@@ -24,8 +25,6 @@ class GestioFamilia : AppCompatActivity() {
     private lateinit var usuarisDao: UsuarisDao
     private lateinit var familiaDao: FamiliaDao
     private lateinit var drawerLayout: DrawerLayout
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,36 +52,33 @@ class GestioFamilia : AppCompatActivity() {
 
 
         loadAdmins()
+        loadFamilies()
         loadFills()
 
-
-        binding.creafamilia.setOnClickListener {
-            val nombreFamilia = binding.nomfamilia.text.toString()
-            val admin = binding.admins.selectedItem.toString()
-
-            val familia = Familia(nombre = nombreFamilia, admin = admin, hijos = listOf())
-
-            lifecycleScope.launch {
-                withContext(Dispatchers.IO) {
-                    familiaDao.insert(familia)
-                }
-
-                Toast.makeText(this@GestioFamilia, "Familia creada", Toast.LENGTH_SHORT).show()
-                loadFamilias()
-            }
+        binding.crearfamilia.setOnClickListener {
+            createFamilia()
         }
 
-        binding.assignarfill.setOnClickListener {
+
+        binding.assignarfills.setOnClickListener {
             val nombreFamilia = binding.nomfamiliaspin.selectedItem.toString()
             val hijo = binding.nomfill1.selectedItem.toString()
 
             lifecycleScope.launch {
-                withContext(Dispatchers.IO) {
-                    val familia = familiaDao.findByName(nombreFamilia)
-                    if (familia != null) {
-                        familia.hijos = familia.hijos.toMutableList().apply { add(hijo) }
+                val familia = withContext(Dispatchers.IO) {
+                    familiaDao.findByName(nombreFamilia)
+                }
+                if (familia != null) {
+                    familia.hijos = familia.hijos.toMutableList().apply { add(hijo) }
+                    withContext(Dispatchers.IO) {
                         familiaDao.update(familia)
-                        Toast.makeText(this@GestioFamilia, "Familia actualitzada", Toast.LENGTH_SHORT).show()
+                    }
+                    runOnUiThread {
+                        Toast.makeText(
+                            this@GestioFamilia,
+                            "Familia actualitzada",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }
@@ -97,7 +93,19 @@ class GestioFamilia : AppCompatActivity() {
             }
 
             val adapter = ArrayAdapter(this@GestioFamilia, R.layout.spinner_item, admins)
-            val spinner: Spinner = findViewById(R.id.admins)
+            val spinner: Spinner = findViewById(R.id.nomadmin)
+            spinner.adapter = adapter
+        }
+    }
+
+    private fun loadFamilies() {
+        lifecycleScope.launch {
+            val families = withContext(Dispatchers.IO) {
+                familiaDao.getAll().map { it.nombre }
+            }
+
+            val adapter = ArrayAdapter(this@GestioFamilia, R.layout.spinner_item, families)
+            val spinner: Spinner = findViewById(R.id.nomfamiliaspin)
             spinner.adapter = adapter
         }
     }
@@ -115,16 +123,30 @@ class GestioFamilia : AppCompatActivity() {
 
     }
 
-    private fun loadFamilias() {
-        lifecycleScope.launch {
-            val familias = withContext(Dispatchers.IO) {
-                familiaDao.getAll().map { it.nombre }
-            }
+    private fun createFamilia() {
+        val familiaName = binding.nomfamilia.text?.toString()
+        val selectedItem = binding.nomadmin.selectedItem
+        Log.d("GestioFamilia", "selectedItem: $selectedItem")
 
-            val adapter = ArrayAdapter(this@GestioFamilia, R.layout.spinner_item, familias)
-            val spinner: Spinner = findViewById(R.id.nomfamiliaspin)
-            spinner.adapter = adapter
+        val adminName = if (selectedItem != null) {
+            selectedItem.toString()
+        } else {
+            Toast.makeText(this, "No admin selected", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (familiaName.isNullOrEmpty()) {
+            Toast.makeText(this, "Seleccioa tot", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val familia = Familia(nombre = familiaName, admin = adminName)
+
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                familiaDao.create(familia)
+            }
+            Toast.makeText(this@GestioFamilia, "Familia creada correctament", Toast.LENGTH_SHORT).show()
         }
     }
-
 }

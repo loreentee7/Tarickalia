@@ -1,20 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="navigation_view">
+    tools:showIn="navigation_view"
+    android:theme="@style/TemaMenu">
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_header"
+            android:title="Tarickalia"
+            android:icon="@drawable/logo2menu"
+            app:showAsAction="always"
+            android:textAppearance="@style/MenuHeader"/>
+        <item
             android:id="@+id/Tasques"
-            android:title="Tasques a Realitzar" />
+            android:title="Tasques a Realitzar"
+            android:icon="@drawable/rewardscreateicon"
+            android:iconTint="@color/purple"
+            />
+
         <item
             android:id="@+id/TasquesCompletes"
-            android:title="Tasques Completades" />
+            android:title="Tasques Completades"
+            android:icon="@drawable/taskcompletedicon"
+            android:iconTint="@color/purple"
+            />
         <item
             android:id="@+id/Recompenses"
-            android:title="Recompenses" />
+            android:title="Recompenses"
+            android:icon="@drawable/recompensesicon"
+            android:iconTint="@color/purple"
+            />
         <item
             android:id="@+id/Puntuacions"
-            android:title="Puntuacions" />
+            android:title="Puntuacions"
+            android:icon="@drawable/puntuacioicon"
+            android:iconTint="@color/purple"
+            />
     </group>
 </menu>

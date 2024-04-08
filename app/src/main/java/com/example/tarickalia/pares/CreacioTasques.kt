@@ -1,32 +1,22 @@
 package com.example.tarickalia.pares
 
-import android.R
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.lifecycleScope
 import com.example.tarickalia.bd.usuaris.AppDatabase
 import com.example.tarickalia.databinding.ActivityCreacioTasquesBinding
-import com.example.tarickalia.familia.Familia
-import com.example.tarickalia.tasques.Tasques
-import com.example.tarickalia.tasques.TasquesDao
 import com.google.android.material.navigation.NavigationView
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
 class CreacioTasques : AppCompatActivity() {
     private lateinit var binding: ActivityCreacioTasquesBinding
-    private lateinit var tasquesDao: TasquesDao
     private lateinit var drawerLayout: DrawerLayout
     var fechaSeleccionada: String = ""
 
@@ -70,8 +60,6 @@ class CreacioTasques : AppCompatActivity() {
             drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
-
-        tasquesDao = AppDatabase.getDatabase(this).tasquesDao()
 
         binding.gohome.setOnClickListener {
             val intent = Intent(this, HomePares::class.java)

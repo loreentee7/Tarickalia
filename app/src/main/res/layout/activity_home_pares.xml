@@ -12,8 +12,6 @@
         android:layout_height="match_parent"
         tools:context=".pares.HomePares">
 
-
-
         <ImageView
             android:id="@+id/fondoapp"
             android:layout_width="1400dp"
@@ -107,6 +105,9 @@
             android:layout_width="130dp"
             android:layout_height="125dp"
             android:text="Gestió de Familia"
+            style="@style/EstiloBotonPersonalizado"
+            android:drawableTint="@color/white"
+            android:drawableTop="@drawable/gestiofamicon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.74"
@@ -119,6 +120,9 @@
             android:layout_width="130dp"
             android:layout_height="125dp"
             android:text="Crear Recompenses"
+            style="@style/EstiloBotonPersonalizado"
+            android:drawableTop="@drawable/recompensesicon"
+            android:drawableTint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.241"
@@ -131,6 +135,9 @@
             android:layout_width="130dp"
             android:layout_height="125dp"
             android:text="Crear Tasca"
+            style="@style/EstiloBotonPersonalizado"
+            android:drawableTop="@drawable/creartascaicon"
+            android:drawableTint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.241"
@@ -142,6 +149,9 @@
             android:layout_width="130dp"
             android:layout_height="125dp"
             android:text="Puntuacions"
+            android:drawableTint="@color/white"
+            style="@style/EstiloBotonPersonalizado"
+            android:drawableTop="@drawable/puntuacioicon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.74"
@@ -153,6 +163,9 @@
             android:layout_width="130dp"
             android:layout_height="125dp"
             android:text="Tasques Completes"
+            style="@style/EstiloBotonPersonalizado"
+            android:drawableTop="@drawable/taskcompletedicon"
+            android:drawableTint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
@@ -176,8 +189,6 @@
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:background="@color/purple"
-        app:itemTextColor="@color/white"
         android:layout_gravity="start"
         app:menu="@menu/activity_main_drawer" />
 

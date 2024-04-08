@@ -14,8 +14,6 @@ import com.example.tarickalia.R
 import com.example.tarickalia.bd.usuaris.AppDatabase
 import com.example.tarickalia.bd.usuaris.UsuarisDao
 import com.example.tarickalia.databinding.ActivityGestioFamiliaBinding
-import com.example.tarickalia.familia.Familia
-import com.example.tarickalia.familia.FamiliaDao
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,7 +23,6 @@ class GestioFamilia : AppCompatActivity() {
 
     private lateinit var binding: ActivityGestioFamiliaBinding
     private lateinit var usuarisDao: UsuarisDao
-    private lateinit var familiaDao: FamiliaDao
     private lateinit var drawerLayout: DrawerLayout
 
 

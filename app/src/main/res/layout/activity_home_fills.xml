@@ -13,7 +13,6 @@
         tools:context=".fills.HomeFIlls">
 
 
-
         <ImageView
             android:id="@+id/fondoapp"
             android:layout_width="1400dp"
@@ -103,11 +102,27 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.244" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Que desitja fer avui?"
+            android:textColor="@color/grey"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.282" />
+
         <Button
             android:id="@+id/btntasques"
             android:layout_width="130dp"
             android:layout_height="125dp"
             android:text="Tasques"
+            style="@style/EstiloBotonPersonalizado"
+            android:drawableTop="@drawable/rewardscreateicon"
+            android:drawableTint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.241"
@@ -120,6 +135,9 @@
             android:layout_width="130dp"
             android:layout_height="125dp"
             android:text="Tasques completes"
+            style="@style/EstiloBotonPersonalizado"
+            android:drawableTop="@drawable/taskcompletedicon"
+            android:drawableTint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.743"
@@ -132,6 +150,9 @@
             android:layout_width="130dp"
             android:layout_height="125dp"
             android:text="Recompenses"
+            style="@style/EstiloBotonPersonalizado"
+            android:drawableTop="@drawable/recompensesicon"
+            android:drawableTint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.241"
@@ -144,6 +165,9 @@
             android:layout_width="130dp"
             android:layout_height="125dp"
             android:text="Puntuacions"
+            style="@style/EstiloBotonPersonalizado"
+            android:drawableTop="@drawable/puntuacioicon"
+            android:drawableTint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.743"
@@ -168,8 +192,6 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/purple"
-        app:itemTextColor="@color/white"
         app:menu="@menu/activity_main_drawer_fills" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

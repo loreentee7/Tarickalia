@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.tarickalia.R
 import com.example.tarickalia.tasques.Tasques
 
 class TaskAdapter(private val tasks: List<Tasques>) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {

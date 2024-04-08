@@ -2,20 +2,12 @@ package com.example.tarickalia.fills
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.tarickalia.R
 import com.example.tarickalia.databinding.ActivityTasquesFillsBinding
-import com.example.tarickalia.pares.CreacioRecompenses
-import com.example.tarickalia.pares.CreacioTasques
-import com.example.tarickalia.pares.GestioFamilia
 import com.example.tarickalia.pares.HomePares
-import com.example.tarickalia.pares.PuntuacionsPares
-import com.example.tarickalia.pares.TasquesCompletesPares
 import com.google.android.material.navigation.NavigationView
 
 class TasquesFills : AppCompatActivity() {
@@ -31,8 +23,10 @@ class TasquesFills : AppCompatActivity() {
         val usernamerebut = intent.getStringExtra("username")
         binding.nomfill.text = usernamerebut
 
+        drawerLayout = findViewById(R.id.drawer_layout)
+
         binding.gohome.setOnClickListener {
-            val intent = Intent(this, HomePares::class.java)
+            val intent = Intent(this, HomeFIlls::class.java)
             intent.putExtra("username", usernamerebut)
             startActivity(intent)
         }

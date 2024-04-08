@@ -24,8 +24,10 @@ class TasquesCompletadesFills : AppCompatActivity() {
         val usernamerebut = intent.getStringExtra("username")
         binding.nomfill.text = usernamerebut
 
+        drawerLayout = findViewById(R.id.drawer_layout)
+
         binding.gohome.setOnClickListener {
-            val intent = Intent(this, HomePares::class.java)
+            val intent = Intent(this, HomeFIlls::class.java)
             intent.putExtra("username", usernamerebut)
             startActivity(intent)
         }

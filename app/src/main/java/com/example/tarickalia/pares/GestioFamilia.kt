@@ -1,4 +1,4 @@
-package com.example.tarickalia
+package com.example.tarickalia.pares
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,11 +10,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
+import com.example.tarickalia.R
 import com.example.tarickalia.bd.usuaris.AppDatabase
 import com.example.tarickalia.bd.usuaris.UsuarisDao
 import com.example.tarickalia.databinding.ActivityGestioFamiliaBinding
 import com.example.tarickalia.familia.Familia
 import com.example.tarickalia.familia.FamiliaDao
+import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -26,6 +28,7 @@ class GestioFamilia : AppCompatActivity() {
     private lateinit var familiaDao: FamiliaDao
     private lateinit var drawerLayout: DrawerLayout
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityGestioFamiliaBinding.inflate(layoutInflater)
@@ -36,6 +39,38 @@ class GestioFamilia : AppCompatActivity() {
 
         drawerLayout = findViewById(R.id.drawer_layout)
 
+        val navigationView: NavigationView = findViewById(R.id.nav_view)
+        navigationView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.GestioFills -> {
+                    val intent = Intent(this, GestioFamilia::class.java)
+                    intent.putExtra("username", binding.nompares.text.toString())
+                    startActivity(intent)
+                }
+                R.id.CreacioTasca -> {
+                    val intent = Intent(this, CreacioTasques::class.java)
+                    intent.putExtra("username", binding.nompares.text.toString())
+                    startActivity(intent)
+                }
+                R.id.CreacioRecompenses -> {
+                    val intent = Intent(this, CreacioRecompenses::class.java)
+                    intent.putExtra("username", binding.nompares.text.toString())
+                    startActivity(intent)
+                }
+                R.id.Puntuacions -> {
+                    val intent = Intent(this, PuntuacionsPares::class.java)
+                    intent.putExtra("username", binding.nompares.text.toString())
+                    startActivity(intent)
+                }
+                R.id.TasquesCompletes -> {
+                    val intent = Intent(this, TasquesCompletesPares::class.java)
+                    intent.putExtra("username", binding.nompares.text.toString())
+                    startActivity(intent)
+                }
+            }
+            drawerLayout.closeDrawer(GravityCompat.START)
+            true
+        }
 
         binding.gohome.setOnClickListener {
             val intent = Intent(this, HomePares::class.java)

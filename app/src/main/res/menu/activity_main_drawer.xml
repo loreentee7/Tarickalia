@@ -9,7 +9,8 @@
             android:title="Gestio de Fills" />
         <item
             android:id="@+id/CreacioTasca"
-            android:title="Creació de Tasques" />
+            android:title="Creació de Tasques"
+            />
         <item
             android:id="@+id/CreacioRecompenses"
             android:title="Creació de Recompenses" />

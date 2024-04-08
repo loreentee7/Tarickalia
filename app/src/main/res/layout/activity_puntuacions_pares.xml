@@ -10,8 +10,7 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".pares.HomePares">
-
+        tools:context=".pares.PuntuacionsPares">
 
 
         <ImageView
@@ -59,10 +58,9 @@
             app:tint="@color/white"/>
 
         <TextView
-            android:id="@+id/homepares"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Home Pares"
+            android:text="Puntuacions"
             android:textColor="@color/white"
             android:fontFamily="@font/adlam"
             android:textSize="30sp"
@@ -89,10 +87,37 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.069" />
 
+
+        <Spinner
+            android:id="@+id/nomfill"
+            android:layout_width="158dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="124dp"
+            android:layout_marginBottom="8dp"
+            android:spinnerMode="dropdown"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.38" />
+
+        <Spinner
+            android:id="@+id/nomfamilia"
+            android:layout_width="158dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="124dp"
+            android:layout_marginBottom="8dp"
+            android:spinnerMode="dropdown"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.268" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Benvingut a Tarickalia!"
+            android:text="Selecció de fill"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -100,75 +125,71 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.19" />
+            app:layout_constraintVertical_bias="0.333" />
 
-        <Button
-            android:id="@+id/btnGestioFamilia"
-            android:layout_width="130dp"
-            android:layout_height="125dp"
-            android:text="Gestió de Familia"
+        <TextView
+            android:id="@+id/puntuacio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="puntuacio"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.74"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.278" />
-
-        <Button
-            android:id="@+id/btnRecompenses"
-            android:layout_width="130dp"
-            android:layout_height="125dp"
-            android:text="Crear Recompenses"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.241"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.278" />
-
-        <Button
-            android:id="@+id/btnTasca"
-            android:layout_width="130dp"
-            android:layout_height="125dp"
-            android:text="Crear Tasca"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.241"
+            app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/btnPuntuacions"
-            android:layout_width="130dp"
-            android:layout_height="125dp"
-            android:text="Puntuacions"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Puntuació total del fill"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.74"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/btnTasquesCompletes"
-            android:layout_width="130dp"
-            android:layout_height="125dp"
-            android:text="Tasques Completes"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.706" />
+            app:layout_constraintVertical_bias="0.453" />
 
-        <ImageView
-            android:layout_width="211dp"
-            android:layout_height="146dp"
-            android:layout_marginBottom="16dp"
-            android:src="@drawable/whiteloho"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Historial de tasques"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintHorizontal_bias="0.504"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.573" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Selecció de familia"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.227" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="337dp"
+            android:layout_height="246dp"
+            android:layout_marginTop="196dp"
+            android:scrollbars="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nomfamilia" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

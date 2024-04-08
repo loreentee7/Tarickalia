@@ -8,6 +8,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.tarickalia.bd.usuaris.AppDatabase
 import com.example.tarickalia.databinding.ActivityMainBinding
+import com.example.tarickalia.fills.HomeFIlls
+import com.example.tarickalia.pares.HomePares
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

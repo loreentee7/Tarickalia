@@ -1,4 +1,4 @@
-package com.example.tarickalia
+package com.example.tarickalia.pares
 
 import android.R
 import android.content.Intent
@@ -16,6 +16,7 @@ import com.example.tarickalia.databinding.ActivityCreacioTasquesBinding
 import com.example.tarickalia.familia.Familia
 import com.example.tarickalia.tasques.Tasques
 import com.example.tarickalia.tasques.TasquesDao
+import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -25,8 +26,8 @@ import java.util.Locale
 
 class CreacioTasques : AppCompatActivity() {
     private lateinit var binding: ActivityCreacioTasquesBinding
-    private lateinit var drawerLayout: DrawerLayout
     private lateinit var tasquesDao: TasquesDao
+    private lateinit var drawerLayout: DrawerLayout
     var fechaSeleccionada: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +37,39 @@ class CreacioTasques : AppCompatActivity() {
 
         val usernamerebut = intent.getStringExtra("username")
         binding.nompares.text = usernamerebut
+
+        val navigationView: NavigationView = findViewById(com.example.tarickalia.R.id.nav_view)
+        navigationView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                com.example.tarickalia.R.id.GestioFills -> {
+                    val intent = Intent(this, GestioFamilia::class.java)
+                    intent.putExtra("username", binding.nompares.text.toString())
+                    startActivity(intent)
+                }
+                com.example.tarickalia.R.id.CreacioTasca -> {
+                    val intent = Intent(this, CreacioTasques::class.java)
+                    intent.putExtra("username", binding.nompares.text.toString())
+                    startActivity(intent)
+                }
+                com.example.tarickalia.R.id.CreacioRecompenses -> {
+                    val intent = Intent(this, CreacioRecompenses::class.java)
+                    intent.putExtra("username", binding.nompares.text.toString())
+                    startActivity(intent)
+                }
+                com.example.tarickalia.R.id.Puntuacions -> {
+                    val intent = Intent(this, PuntuacionsPares::class.java)
+                    intent.putExtra("username", binding.nompares.text.toString())
+                    startActivity(intent)
+                }
+                com.example.tarickalia.R.id.TasquesCompletes -> {
+                    val intent = Intent(this, TasquesCompletesPares::class.java)
+                    intent.putExtra("username", binding.nompares.text.toString())
+                    startActivity(intent)
+                }
+            }
+            drawerLayout.closeDrawer(GravityCompat.START)
+            true
+        }
 
         tasquesDao = AppDatabase.getDatabase(this).tasquesDao()
 

@@ -15,16 +15,28 @@
         android:theme="@style/Theme.Tarickalia"
         tools:targetApi="31">
         <activity
-            android:name=".CreacioTasques"
+            android:name=".pares.NavigationPares"
             android:exported="false" />
         <activity
-            android:name=".GestioFamilia"
+            android:name=".pares.CreacioRecompenses"
             android:exported="false" />
         <activity
-            android:name=".HomeFIlls"
+            android:name=".pares.PuntuacionsPares"
             android:exported="false" />
         <activity
-            android:name=".HomePares"
+            android:name=".pares.TasquesCompletesPares"
+            android:exported="false" />
+        <activity
+            android:name=".pares.CreacioTasques"
+            android:exported="false" />
+        <activity
+            android:name=".pares.GestioFamilia"
+            android:exported="false" />
+        <activity
+            android:name=".fills.HomeFIlls"
+            android:exported="false" />
+        <activity
+            android:name=".pares.HomePares"
             android:exported="false"
             android:label="@string/title_activity_home_pares"
             android:theme="@style/Theme.Tarickalia.NoActionBar" />

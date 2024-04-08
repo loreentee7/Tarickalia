@@ -12,7 +12,6 @@ class TaskAdapter(private val tasks: List<Tasques>) : RecyclerView.Adapter<TaskA
 
     class TaskViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val taskName: TextView = view.findViewById(R.id.task_name)
-        // Add more views here if needed
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
@@ -23,7 +22,6 @@ class TaskAdapter(private val tasks: List<Tasques>) : RecyclerView.Adapter<TaskA
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val task = tasks[position]
         holder.taskName.text = task.nombreTarea
-        // Set more data here if needed
     }
 
     override fun getItemCount() = tasks.size

@@ -15,6 +15,18 @@
         android:theme="@style/Theme.Tarickalia"
         tools:targetApi="31">
         <activity
+            android:name=".fills.RecompensesFills"
+            android:exported="false" />
+        <activity
+            android:name=".fills.PuntuacionsFills"
+            android:exported="false" />
+        <activity
+            android:name=".fills.TasquesCompletadesFills"
+            android:exported="false" />
+        <activity
+            android:name=".fills.TasquesFills"
+            android:exported="false" />
+        <activity
             android:name=".pares.NavigationPares"
             android:exported="false" />
         <activity

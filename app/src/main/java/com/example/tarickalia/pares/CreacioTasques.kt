@@ -120,61 +120,16 @@ class CreacioTasques : AppCompatActivity() {
             val dificultadSeleccionada = binding.dificultat.selectedItem.toString()
             val puntuacion = binding.puntuacio.text.toString().toInt()
 
-            lifecycleScope.launch {
-                val familiaDao = AppDatabase.getDatabase(this@CreacioTasques).familiaDao()
-                val familia = withContext(Dispatchers.IO) { familiaDao.findByName(hijoSeleccionado) }
-                if (familia != null) {
-                    val nuevaTasca = Tasques(
-                        hijo = hijoSeleccionado,
-                        nombreTarea = nombreTarea,
-                        dificultad = dificultadSeleccionada,
-                        puntuacion = puntuacion,
-                        fechaVencimiento = fechaSeleccionada
-                    )
-
-                    withContext(Dispatchers.IO) {
-                        tasquesDao.insert(nuevaTasca)
-                    }
-                    Toast.makeText(this@CreacioTasques, "Tasca creada correctamente", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(this@CreacioTasques, "Familia no encontrada", Toast.LENGTH_SHORT).show()
-                }
-            }
         }
     }
     private fun cargarFamiliasEnSpinner() {
-        lifecycleScope.launch {
-            val familias = obtenerFamilias()
-            val nombresFamilias = obtenerNombresFamilias(familias)
-
-            val adapter = ArrayAdapter(this@CreacioTasques, R.layout.simple_spinner_item, nombresFamilias)
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            binding.nomfamilia.adapter = adapter
-
-            binding.nomfamilia.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                    val nombreFamiliaSeleccionada = parent.getItemAtPosition(position).toString()
-                    val familiaSeleccionada = familias.find { it.nombre == nombreFamiliaSeleccionada }
-                    if (familiaSeleccionada != null) {
-                        val nombresHijos = familiaSeleccionada.hijos
-                        val adapterHijos = ArrayAdapter(this@CreacioTasques, android.R.layout.simple_spinner_item, nombresHijos)
-                        adapterHijos.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                        binding.nomfill.adapter = adapterHijos
-                    }
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>) {
-                }
-            }
-        }
     }
-    private suspend fun obtenerFamilias(): List<Familia> {
-        val familiaDao = AppDatabase.getDatabase(this@CreacioTasques).familiaDao()
-        return withContext(Dispatchers.IO) { familiaDao.getAll() }
-    }
-    private fun obtenerNombresFamilias(familias: List<Familia>): List<String> {
-        return familias.map { it.nombre }
-    }
+   // private suspend fun obtenerFamilias(): List<Familia> {
+
+  //  }
+  // private fun obtenerNombresFamilias(familias: List<Familia>): List<String> {
+
+  // }
 
 
 }

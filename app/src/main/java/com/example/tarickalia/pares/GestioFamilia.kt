@@ -82,9 +82,6 @@ class GestioFamilia : AppCompatActivity() {
             drawerLayout.openDrawer(GravityCompat.START)
         }
 
-        usuarisDao = AppDatabase.getDatabase(this).usuarisDao()
-        familiaDao = AppDatabase.getDatabase(this).familiaDao()
-
 
         loadAdmins()
         loadFamilies()
@@ -98,70 +95,25 @@ class GestioFamilia : AppCompatActivity() {
         binding.assignarfills.setOnClickListener {
             val nombreFamilia = binding.nomfamiliaspin.selectedItem.toString()
             val hijo = binding.nomfill1.selectedItem.toString()
-
-            lifecycleScope.launch {
-                val familia = withContext(Dispatchers.IO) {
-                    familiaDao.findByName(nombreFamilia)
-                }
-                if (familia != null) {
-                    familia.hijos = familia.hijos.toMutableList().apply { add(hijo) }
-                    withContext(Dispatchers.IO) {
-                        familiaDao.update(familia)
-                    }
-                    runOnUiThread {
-                        Toast.makeText(
-                            this@GestioFamilia,
-                            "Familia actualitzada",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            }
         }
 
     }
 
     private fun loadAdmins() {
-        lifecycleScope.launch {
-            val admins = withContext(Dispatchers.IO) {
-                usuarisDao.getAll().filter { it.admin }.map { it.usuari }
-            }
 
-            val adapter = ArrayAdapter(this@GestioFamilia, R.layout.spinner_item, admins)
-            val spinner: Spinner = findViewById(R.id.nomadmin)
-            spinner.adapter = adapter
-        }
     }
 
     private fun loadFamilies() {
-        lifecycleScope.launch {
-            val families = withContext(Dispatchers.IO) {
-                familiaDao.getAll().map { it.nombre }
-            }
 
-            val adapter = ArrayAdapter(this@GestioFamilia, R.layout.spinner_item, families)
-            val spinner: Spinner = findViewById(R.id.nomfamiliaspin)
-            spinner.adapter = adapter
-        }
     }
 
     private fun loadFills() {
-        lifecycleScope.launch {
-            val noAdmins = withContext(Dispatchers.IO) {
-                usuarisDao.getAll().filter { !it.admin }.map { it.usuari }
-            }
-
-            val adapter = ArrayAdapter(this@GestioFamilia, R.layout.spinner_item, noAdmins)
-            val spinner: Spinner = findViewById(R.id.nomfill1)
-            spinner.adapter = adapter
-        }
 
     }
 
     private fun createFamilia() {
         val familiaName = binding.nomfamilia.text?.toString()
         val selectedItem = binding.nomadmin.selectedItem
-        Log.d("GestioFamilia", "selectedItem: $selectedItem")
 
         val adminName = if (selectedItem != null) {
             selectedItem.toString()
@@ -175,13 +127,7 @@ class GestioFamilia : AppCompatActivity() {
             return
         }
 
-        val familia = Familia(nombre = familiaName, admin = adminName)
+        // val familia = Familia(nombre = familiaName, admin = adminName)
 
-        lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                familiaDao.create(familia)
-            }
-            Toast.makeText(this@GestioFamilia, "Familia creada correctament", Toast.LENGTH_SHORT).show()
-        }
     }
 }

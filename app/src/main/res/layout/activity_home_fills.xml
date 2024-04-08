@@ -12,7 +12,6 @@
         android:layout_height="match_parent"
         tools:context=".fills.HomeFIlls">
 
-
         <ImageView
             android:id="@+id/fondoapp"
             android:layout_width="1400dp"

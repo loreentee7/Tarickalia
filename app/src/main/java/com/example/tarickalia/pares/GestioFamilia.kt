@@ -11,8 +11,6 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
 import com.example.tarickalia.R
-import com.example.tarickalia.bd.usuaris.AppDatabase
-import com.example.tarickalia.bd.usuaris.UsuarisDao
 import com.example.tarickalia.databinding.ActivityGestioFamiliaBinding
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +20,6 @@ import kotlinx.coroutines.withContext
 class GestioFamilia : AppCompatActivity() {
 
     private lateinit var binding: ActivityGestioFamiliaBinding
-    private lateinit var usuarisDao: UsuarisDao
     private lateinit var drawerLayout: DrawerLayout
 
 

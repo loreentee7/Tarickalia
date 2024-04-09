@@ -8,7 +8,6 @@ import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import com.example.tarickalia.bd.usuaris.AppDatabase
 import com.example.tarickalia.databinding.ActivityCreacioTasquesBinding
 import com.google.android.material.navigation.NavigationView
 import java.text.SimpleDateFormat

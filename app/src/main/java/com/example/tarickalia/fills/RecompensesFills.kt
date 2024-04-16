@@ -2,13 +2,11 @@ package com.example.tarickalia.fills
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.tarickalia.R
 import com.example.tarickalia.databinding.ActivityRecompensesFillsBinding
-import com.example.tarickalia.pares.HomePares
 import com.google.android.material.navigation.NavigationView
 
 class RecompensesFills : AppCompatActivity() {

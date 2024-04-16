@@ -24,6 +24,9 @@ class HomePares : AppCompatActivity() {
             drawerLayout.openDrawer(GravityCompat.START)
         }
 
+        val usernamerebut = intent.getStringExtra("username")
+        binding.nompares.text = usernamerebut
+
         val navigationView: NavigationView = findViewById(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -87,7 +90,6 @@ class HomePares : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val usernamerebut = intent.getStringExtra("username")
-        binding.nompares.text = usernamerebut
+
     }
 }

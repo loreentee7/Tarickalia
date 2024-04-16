@@ -115,6 +115,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.451" />
 
+
         <EditText
             android:id="@+id/nomfamilia"
             android:layout_width="158dp"
@@ -127,12 +128,10 @@
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.177"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.259" />
-
-
+            app:layout_constraintVertical_bias="0.256" />
 
         <Spinner
             android:id="@+id/nomfill1"
@@ -160,20 +159,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.52" />
-
-        <Spinner
-            android:id="@+id/nomadmin"
-            android:layout_width="158dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="48dp"
-            android:layout_marginBottom="8dp"
-            android:spinnerMode="dropdown"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.253" />
 
         <Button
             android:id="@+id/assignarfills"

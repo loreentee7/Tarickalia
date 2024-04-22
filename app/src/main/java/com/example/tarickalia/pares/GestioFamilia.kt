@@ -2,7 +2,6 @@ package com.example.tarickalia.pares
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
@@ -23,7 +22,6 @@ class GestioFamilia : AppCompatActivity() {
 
     private lateinit var binding: ActivityGestioFamiliaBinding
     private lateinit var drawerLayout: DrawerLayout
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -221,7 +219,7 @@ class GestioFamilia : AppCompatActivity() {
 
                             selectedFill.idFamilia = selectedFamilia.id
 
-                            val responseUsuario = apiService.putUsuario(selectedFill.Id!!, selectedFill)
+                            val responseUsuario = apiService.putUsuario(selectedFill.id!!, selectedFill)
 
                             if (responseUsuario.isSuccessful) {
                                 val responseFamilia = apiService.putFamilium(selectedFamilia.id!!, selectedFamilia)

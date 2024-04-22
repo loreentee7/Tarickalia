@@ -23,7 +23,7 @@ class TarickaliaApi: CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-        private val urlapi = "https://172.16.24.165:3353/api/"
+    private val urlapi = "https://172.16.24.165:3353/api/"
 
     private fun getClient(): OkHttpClient {
         var login = HttpLoggingInterceptor()

@@ -44,9 +44,9 @@ interface ApiServices {
     // Tareas
     @GET("Tareas")
     suspend fun getTareas(): Response<List<Tarea>>
-
+    
     @POST("Tareas")
-    suspend fun postTarea(@Body tarea: Tarea): Response<Tarea>
+    suspend fun createTask(@Body tarea: Tarea): Response<Tarea>
 
     @GET("Tareas/{id}")
     suspend fun getTarea(@Path("id") id: Int): Response<Tarea>

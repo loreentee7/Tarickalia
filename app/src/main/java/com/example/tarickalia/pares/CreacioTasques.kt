@@ -5,11 +5,13 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
+import com.example.tarickalia.R
 import com.example.tarickalia.api.Models.Familium
 import com.example.tarickalia.api.Models.Tarea
 import com.example.tarickalia.api.Models.Usuario
@@ -21,15 +23,16 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 class CreacioTasques : AppCompatActivity() {
     private lateinit var binding: ActivityCreacioTasquesBinding
     private lateinit var drawerLayout: DrawerLayout
-    var fechaSeleccionada: String = ""
     private var familias: List<Familium>? = null
     private var selectedFamilia: Familium? = null
     private var usuarios: List<Usuario>? = null
+    private var selectedDate: Date? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,18 +91,17 @@ class CreacioTasques : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val selectedFamiliaName = parent.getItemAtPosition(position).toString()
                 selectedFamilia = familias?.find { it.nombre == selectedFamiliaName }
-                selectedFamilia?.id?.let { cargarHijosEnSpinner(it) }
+                selectedFamilia?.id?.let { cargarUsuariosDeFamiliaEnSpinner(it) }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
             }
         }
 
-        binding.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
+        binding.calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
             val calendar = Calendar.getInstance()
             calendar.set(year, month, dayOfMonth)
-            val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-            fechaSeleccionada = dateFormat.format(calendar.time)
+            selectedDate = calendar.time
         }
 
 
@@ -123,7 +125,6 @@ class CreacioTasques : AppCompatActivity() {
 
             override fun onNothingSelected(parent: AdapterView<*>) {
             }
-
         }
 
         binding.btncrear.setOnClickListener {
@@ -136,16 +137,48 @@ class CreacioTasques : AppCompatActivity() {
             val usuarioSeleccionado = usuarios?.find { it.nombreUsuario == hijoSeleccionado }
             val usuarioId = usuarioSeleccionado?.id
 
-            if (familiaId != null && usuarioId != null) {
-                val nuevaTarea = Tarea(
-                    Nombre = nombreTarea,
-                    Dificultad = dificultadSeleccionada,
-                    Puntuacion = puntuacion,
-                    IdFamilia = familiaId,
-                    IdUsuario = usuarioId
-                )
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+            val fechaCaducidadString = selectedDate?.let { dateFormat.format(it) }
 
-                crearTarea(nuevaTarea)
+            if (familiaId != null && usuarioId != null) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    val apiService = TarickaliaApi().getApiService()
+                    val responseTareas = apiService.getTareas()
+                    if (responseTareas.isSuccessful) {
+                        val tareas = responseTareas.body()
+                        var nuevaTarea = Tarea(
+                            nombre = nombreTarea,
+                            dificultad = dificultadSeleccionada,
+                            completada = false,
+                            puntuacion = puntuacion,
+                            idFamilia = familiaId,
+                            idUsuario = usuarioId,
+                            fechaCaducidad = fechaCaducidadString
+                        )
+                        var responseTarea = apiService.createTask(nuevaTarea)
+                        while (!responseTarea.isSuccessful && responseTarea.code() == 409) {
+                            nuevaTarea = Tarea(
+                                nombre = nombreTarea,
+                                dificultad = dificultadSeleccionada,
+                                completada = false,
+                                puntuacion = puntuacion,
+                                idFamilia = familiaId,
+                                idUsuario = usuarioId,
+                                fechaCaducidad = fechaCaducidadString
+                            )
+                            responseTarea = apiService.createTask(nuevaTarea)
+                        }
+                        if (responseTarea.isSuccessful) {
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(this@CreacioTasques, "Tarea creada con éxito", Toast.LENGTH_SHORT).show()
+                            }
+                        } else {
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(this@CreacioTasques, "Error al crear la tarea", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                }
             } else {
                 Toast.makeText(this, "Por favor, selecciona una familia y un usuario", Toast.LENGTH_SHORT).show()
             }
@@ -156,15 +189,32 @@ class CreacioTasques : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val apiService = TarickaliaApi().getApiService()
-                val response = apiService.createTask(tarea)
+                // Obtén todas las tareas
+                val responseTareas = apiService.getTareas()
+                if (responseTareas.isSuccessful) {
+                    val tareas = responseTareas.body()
+
+                    // Crea la nueva tarea
+                    val response = apiService.createTask(tarea)
+
+
 
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
                         Toast.makeText(this@CreacioTasques, "Tarea creada con éxito", Toast.LENGTH_SHORT).show()
                     } else {
-                        Toast.makeText(this@CreacioTasques, "Error al crear la tarea", Toast.LENGTH_SHORT).show()
+                        if (response.code() == 409) {
+                            Toast.makeText(this@CreacioTasques, "Ya existe una tarea con los mismos detalles", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this@CreacioTasques, "Error al crear la tarea", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
+            } else {
+            withContext(Dispatchers.Main) {
+                Toast.makeText(this@CreacioTasques, "Error al obtener las tareas", Toast.LENGTH_SHORT).show()
+            }
+            }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     Toast.makeText(this@CreacioTasques, "Error al crear la tarea", Toast.LENGTH_SHORT).show()
@@ -195,30 +245,27 @@ class CreacioTasques : AppCompatActivity() {
         }
     }
 
-    private fun cargarHijosEnSpinner(familiaId: Int) {
+    private fun cargarUsuariosDeFamiliaEnSpinner(idFamilia: Int) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val apiService = TarickaliaApi().getApiService()
-                val responseUsuarios = apiService.getUsuariosByFamilia(familiaId)
+                val responseUsuarios = apiService.getUsuariosByFamilia(idFamilia)
+
                 if (responseUsuarios.isSuccessful) {
-                    val usuarios = responseUsuarios.body()
-                    val hijos = usuarios?.filter { !it.admin!! }
+                    usuarios = responseUsuarios.body()
                     withContext(Dispatchers.Main) {
-                        val hijoNames = hijos?.map { it.nombreUsuario }
-                        if (hijoNames != null) {
-                            val adapter = ArrayAdapter(this@CreacioTasques, android.R.layout.simple_spinner_item, hijoNames)
-                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                            binding.nomfill.adapter = adapter
-                        }
+                        val usuarioNames = usuarios?.map { it.nombreUsuario } ?: listOf()
+                        val adapter = ArrayAdapter(this@CreacioTasques, android.R.layout.simple_spinner_item, usuarioNames)
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                        binding.nomfill.adapter = adapter
                     }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@CreacioTasques, "Error al cargar los hijos", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@CreacioTasques, "Error al cargar los usuarios", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
-
 
 }

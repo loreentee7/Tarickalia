@@ -6,11 +6,14 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.lifecycleScope
 import com.example.tarickalia.databinding.ActivityTasquesCompletadesFillsBinding
 import com.example.tarickalia.R
+import com.example.tarickalia.api.TarickaliaApi
 import com.example.tarickalia.databinding.ActivityTasquesFillsBinding
 import com.example.tarickalia.pares.HomePares
 import com.google.android.material.navigation.NavigationView
+import kotlinx.coroutines.Dispatchers
 
 class TasquesCompletadesFills : AppCompatActivity() {
 

@@ -29,6 +29,8 @@ class CreacioRecompenses : AppCompatActivity() {
     private var familias: List<Familium>? = null
     private var selectedFamilia: Familium? = null
     private var selectedChild: Usuario? = null
+    private var usuarios: List<Usuario>? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,10 +85,12 @@ class CreacioRecompenses : AppCompatActivity() {
             drawerLayout.openDrawer(GravityCompat.START)
         }
 
+        cargarFamiliasEnSpinner()
+
         binding.nomfamilia.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val selectedFamiliaName = parent.getItemAtPosition(position).toString()
-                loadChildren(selectedFamiliaName)
+                selectedFamilia = familias?.find { it.nombre == selectedFamiliaName }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -94,31 +98,62 @@ class CreacioRecompenses : AppCompatActivity() {
         }
 
         binding.btncrear.setOnClickListener {
-            val puntuacionNecesaria = binding.puntuacio.text.toString().toIntOrNull()
             val nombreRecompensa = binding.nomrecompensa.text.toString()
-            val selectedChildName = binding.nomfill.selectedItem.toString()
+            val puntuacion = binding.puntuacio.text.toString().toInt()
+            val familiaId = selectedFamilia?.id
 
-            if (puntuacionNecesaria != null && nombreRecompensa.isNotBlank()) {
-                creariassignarrecompensa(puntuacionNecesaria, nombreRecompensa, selectedChildName)
+            if (familiaId != null) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    val apiService = TarickaliaApi().getApiService()
+                    val responseRecompensas = apiService.getRecompensas()
+                    if (responseRecompensas.isSuccessful) {
+                        val recompensas = responseRecompensas.body()
+                        var nuevaRecompensa = Recompensa(
+                            Nombre = nombreRecompensa,
+                            Puntuacion = puntuacion,
+                            Reclamada = false,
+                            IdFamilia = familiaId
+                        )
+                        var responseRecompensa = apiService.postRecompensa(nuevaRecompensa)
+                        while (!responseRecompensa.isSuccessful && responseRecompensa.code() == 409) {
+                            nuevaRecompensa = Recompensa(
+                                Nombre = nombreRecompensa,
+                                Puntuacion = puntuacion,
+                                Reclamada = false,
+                                IdFamilia = familiaId
+                            )
+                            responseRecompensa = apiService.postRecompensa(nuevaRecompensa)
+                        }
+                        if (responseRecompensa.isSuccessful) {
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(this@CreacioRecompenses, "Recompensa creada con éxito", Toast.LENGTH_SHORT).show()
+                            }
+                        } else {
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(this@CreacioRecompenses, "Error al crear la recompensa", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                }
             } else {
-                Toast.makeText(this, "Por favor, introduce una puntuación válida y un nombre de tarea", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Por favor, selecciona una familia", Toast.LENGTH_SHORT).show()
             }
         }
 
+
     }
 
-    private fun loadFamilies() {
+    private fun cargarFamiliasEnSpinner() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val apiService = TarickaliaApi().getApiService()
-                val response = apiService.getFamiliums()
+                val responseFamilias = apiService.getFamiliums()
 
-                if (response.isSuccessful) {
-                    val familias = response.body()
-                    val familiaNames = familias?.map { it.nombre }
-                    val familiaNamesNonNull = familiaNames?.filterNotNull()
-                    if (familiaNamesNonNull != null) {
-                        val adapter = ArrayAdapter(this@CreacioRecompenses, android.R.layout.simple_spinner_item, familiaNamesNonNull)
+                if (responseFamilias.isSuccessful) {
+                    familias = responseFamilias.body()
+                    withContext(Dispatchers.Main) {
+                        val familiaNames = familias?.map { it.nombre } ?: listOf()
+                        val adapter = ArrayAdapter(this@CreacioRecompenses, android.R.layout.simple_spinner_item, familiaNames)
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                         binding.nomfamilia.adapter = adapter
                     }
@@ -131,58 +166,29 @@ class CreacioRecompenses : AppCompatActivity() {
         }
     }
 
-    private fun loadChildren(familiaName: String) {
+    private fun crearRecompensa(recompensa: Recompensa) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val apiService = TarickaliaApi().getApiService()
-                val response = apiService.getFamiliums()
+                val responseRecompensa = apiService.postRecompensa(recompensa)
 
-                if (response.isSuccessful) {
-                    val familias = response.body()
-                    val selectedFamilia = familias?.find { it.nombre == familiaName }
-                    val childrenNames = selectedFamilia?.usuarios?.map { it.nombreUsuario }
-                    val childrenNamesNonNull = childrenNames?.filterNotNull()
-                    if (childrenNamesNonNull != null) {
-                        withContext(Dispatchers.Main) {
-                            val adapter = ArrayAdapter(this@CreacioRecompenses, android.R.layout.simple_spinner_item, childrenNamesNonNull)
-                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                            binding.nomfill.adapter = adapter
-                        }
+                if (responseRecompensa.isSuccessful) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@CreacioRecompenses, "Recompensa creada con éxito", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@CreacioRecompenses, "Error al crear la recompensa", Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@CreacioRecompenses, "Error al cargar los hijos", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@CreacioRecompenses, "Error al crear la recompensa", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
-    private fun creariassignarrecompensa(puntuacionNecesaria: Int, nombreRecompensa: String, selectedChildName: String) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val apiService = TarickaliaApi().getApiService()
 
-                val recompensa = Recompensa(
-                    Nombre = nombreRecompensa,
-                    Puntuacion = puntuacionNecesaria,
-                    IdFamilia = selectedFamilia?.id
-                )
 
-                val response = apiService.postRecompensa(recompensa)
-
-                withContext(Dispatchers.Main) {
-                    if (response.isSuccessful) {
-                        Toast.makeText(this@CreacioRecompenses, "Recompensa creada y asignada amb éxito", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(this@CreacioRecompenses, "Error al crear y asignar la recompensa", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@CreacioRecompenses, "Error al crear y asignar la recompensa", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
 }

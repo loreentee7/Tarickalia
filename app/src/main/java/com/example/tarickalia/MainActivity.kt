@@ -29,13 +29,6 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        binding.debugf.setOnClickListener() {
-            startActivity(Intent(this, HomeFIlls::class.java))
-        }
-
-        binding.debugp.setOnClickListener() {
-            startActivity(Intent(this, HomePares::class.java))
-        }
 
         binding.login.setOnClickListener() {
             val username = binding.editTextTextEmailAddress.text.toString()

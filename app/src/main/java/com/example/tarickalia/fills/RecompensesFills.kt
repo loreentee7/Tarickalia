@@ -2,12 +2,19 @@ package com.example.tarickalia.fills
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.lifecycleScope
 import com.example.tarickalia.R
+import com.example.tarickalia.RecompensaAdapter
+import com.example.tarickalia.api.TarickaliaApi
 import com.example.tarickalia.databinding.ActivityRecompensesFillsBinding
 import com.google.android.material.navigation.NavigationView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class RecompensesFills : AppCompatActivity() {
 
@@ -62,7 +69,34 @@ class RecompensesFills : AppCompatActivity() {
             true
         }
 
+        val apiService = TarickaliaApi().getApiService()
 
+        lifecycleScope.launch(Dispatchers.IO) {
+            val apiService = TarickaliaApi().getApiService()
 
+            val usersResponse = apiService.getUsuarios()
+            if (usersResponse.isSuccessful) {
+                val users = usersResponse.body()
+                val user = users?.find { it.nombreUsuario == usernamerebut }
+                val familyId = user?.idFamilia
+
+                if (familyId != null) {
+                    val rewardsResponse = apiService.getRecompensasByFamilia(familyId)
+                    if (rewardsResponse.isSuccessful) {
+                        val rewards = rewardsResponse.body()
+
+                        withContext(Dispatchers.Main) {
+                            if (rewards != null && rewards.isNotEmpty()) {
+                                val adapter = RecompensaAdapter(rewards, user, apiService, lifecycleScope)
+                                binding.recyclerView.adapter = adapter
+                            } else {
+                                Toast.makeText(this@RecompensesFills, "No hay recompensas disponibles", Toast.LENGTH_SHORT).show()
+                            }
+                            binding.credit.text = user?.Monedas?.toString() ?: "0"
+                        }
+                    }
+                }
+            }
+        }
     }
 }

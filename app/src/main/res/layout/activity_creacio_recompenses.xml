@@ -101,22 +101,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.391" />
 
-        <EditText
-            android:id="@+id/puntuacio"
-            android:layout_width="188dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="108dp"
-            android:layout_marginBottom="8dp"
-            android:hint="Puntuació"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.626" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -126,23 +110,42 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.488"
+            app:layout_constraintHorizontal_bias="0.462"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.566" />
+            app:layout_constraintVertical_bias="0.484" />
 
-        <Spinner
-            android:id="@+id/nomfill"
-            android:layout_width="158dp"
+        <EditText
+            android:id="@+id/nomrecompensa"
+            android:layout_width="188dp"
             android:layout_height="48dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="124dp"
+            android:layout_marginEnd="156dp"
             android:layout_marginBottom="8dp"
-            android:spinnerMode="dropdown"
+            android:hint="Nom Recompensa"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.503" />
+            app:layout_constraintVertical_bias="0.638" />
+
+        <EditText
+            android:id="@+id/puntuacio"
+            android:layout_width="188dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="112dp"
+            android:layout_marginBottom="8dp"
+            android:hint="Puntuació"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.539" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -158,20 +161,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.343" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Selecció de fill"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.489"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.45" />
-
         <Button
             android:id="@+id/btncrear"
             android:layout_width="wrap_content"
@@ -181,26 +170,10 @@
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.832"
+            app:layout_constraintHorizontal_bias="0.835"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.72" />
-
-        <EditText
-            android:id="@+id/nomrecompensa"
-            android:layout_width="188dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="152dp"
-            android:layout_marginBottom="8dp"
-            android:hint="Nom Recompensa"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.725" />
+            app:layout_constraintVertical_bias="0.635" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

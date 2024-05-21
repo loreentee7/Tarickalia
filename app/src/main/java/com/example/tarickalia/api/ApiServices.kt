@@ -38,6 +38,9 @@ interface ApiServices {
     @PUT("Recompensas/{id}")
     suspend fun putRecompensa(@Path("id") id: Int, @Body recompensa: Recompensa): Response<Recompensa>
 
+    @GET("Recompensas/familia/{idFamilia}")
+    suspend fun getRecompensasByFamilia(@Path("idFamilia") idFamilia: Int): Response<List<Recompensa>>
+
     @DELETE("Recompensas/{id}")
     suspend fun deleteRecompensa(@Path("id") id: Int): Response<Void>
 
@@ -48,14 +51,22 @@ interface ApiServices {
     @POST("Tareas")
     suspend fun createTask(@Body tarea: Tarea): Response<Tarea>
 
+    @GET("Tareas/familia/{idFamilia}")
+    suspend fun getTareaIdFamilia(@Path("idFamilia") idFamilia: Int): Response<List<Tarea>>
+
     @GET("Tareas/{id}")
     suspend fun getTarea(@Path("id") id: Int): Response<Tarea>
+
+    @GET("Tareas/usuario/{idUsuario}")
+    suspend fun getTareasByUsuario(@Path("idUsuario") idUsuario: Int): Response<List<Tarea>>
 
     @PUT("Tareas/{id}")
     suspend fun putTarea(@Path("id") id: Int, @Body tarea: Tarea): Response<Tarea>
 
     @DELETE("Tareas/{id}")
     suspend fun deleteTarea(@Path("id") id: Int): Response<Void>
+
+
 
     // Usuarios
     @GET("Usuarios")
@@ -73,6 +84,6 @@ interface ApiServices {
     @DELETE("Usuarios/{id}")
     suspend fun deleteUsuario(@Path("id") id: Int): Response<Void>
 
-    @GET("Usuarios/Familia/{idFamilia}")
+    @GET("Usuarios/familia/{idFamilia}")
     suspend fun getUsuariosByFamilia(@Path("idFamilia") idFamilia: Int): Response<List<Usuario>>
 }

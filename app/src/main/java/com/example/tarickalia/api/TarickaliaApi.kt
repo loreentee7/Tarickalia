@@ -23,7 +23,7 @@ class TarickaliaApi: CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    private val urlapi = "https://172.16.24.165:3353/api/"
+    private val urlapi = "https://172.16.24.148:53198/api/"
 
     private fun getClient(): OkHttpClient {
         var login = HttpLoggingInterceptor()
@@ -44,7 +44,6 @@ class TarickaliaApi: CoroutineScope {
 
     private fun getUnsafeOkHttpClient(): OkHttpClient {
         try {
-            // Create a trust manager that does not validate certificate chains
             val trustAllCerts = arrayOf<TrustManager>(
                 object : X509TrustManager {
                     override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) = Unit

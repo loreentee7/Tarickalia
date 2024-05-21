@@ -3,14 +3,15 @@ package com.example.tarickalia.api.Models
 import java.util.Date
 
 data class Tarea(
-    var Id: Int? = null,
-    var Nombre: String? = null,
-    var Dificultad: String? = null,
-    var Completada: Boolean? = null,
-    var Puntuacion: Int? = null,
-    var FechaCaducidad: Date? = null,
-    var IdFamilia: Int? = null,
-    var IdUsuario: Int? = null,
-    var IdFamiliaNavigation: Familium? = null,
-    var IdUsuarioNavigation: Usuario? = null
+    var id: Int? = null,
+    var nombre: String? = null,
+    var dificultad: String? = null,
+    var completada: Boolean? = null,
+    var aprobada: Boolean? = null,
+    var puntuacion: Int? = null,
+    var fechaCaducidad: String? = null,
+    var idFamilia: Int? = null,
+    var idUsuario: Int? = null,
+    var idFamiliaNavigation: Familium? = null,
+    var idUsuarioNavigation: Usuario? = null
 )

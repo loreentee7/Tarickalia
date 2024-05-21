@@ -18,8 +18,11 @@ import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import android.widget.Toast
-import com.example.tarickalia.TareaAdapter
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.withContext
+import com.example.tarickalia.api.Models.Tarea
+import com.example.tarickalia.pares.TareaAdapter
+
 
 
 
@@ -30,6 +33,9 @@ class PuntuacionsPares : AppCompatActivity() {
     private var familias: List<Familium>? = null
     private var selectedFamilia: Familium? = null
     private var usuarios: List<Usuario>? = null
+
+    private var tareas: List<Tarea>? = null
+    private var tareaAdapter: TareaAdapter? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,11 +50,15 @@ class PuntuacionsPares : AppCompatActivity() {
 
         cargarFamiliasEnSpinner()
 
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        tareaAdapter = TareaAdapter(mutableListOf<Tarea>())
+        binding.recyclerView.adapter = tareaAdapter
+
         binding.nomfamilia.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val selectedFamiliaName = parent.getItemAtPosition(position).toString()
                 selectedFamilia = familias?.find { it.nombre == selectedFamiliaName }
-                selectedFamilia?.id?.let { cargarHijosEnSpinner(it) }
+                selectedFamilia?.id?.let { cargarUsuariosDeFamiliaEnSpinner(it) }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -59,9 +69,9 @@ class PuntuacionsPares : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val selectedHijoName = parent.getItemAtPosition(position).toString()
                 val selectedHijo = usuarios?.find { it.nombreUsuario == selectedHijoName }
-                binding.puntuacio.text = selectedHijo?.Monedas.toString()
+                binding.puntuacio.text = (selectedHijo?.Monedas ?: 0).toString()
 
-                selectedHijo?.id?.let { cargarTareas(it) }
+
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -112,6 +122,17 @@ class PuntuacionsPares : AppCompatActivity() {
             startActivity(intent)
         }
 
+        binding.nomfamilia.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                val selectedFamiliaName = parent.getItemAtPosition(position).toString()
+                selectedFamilia = familias?.find { it.nombre == selectedFamiliaName }
+                selectedFamilia?.id?.let { cargarUsuariosDeFamiliaEnSpinner(it) }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+            }
+        }
+
     }
 
     private fun cargarFamiliasEnSpinner() {
@@ -136,49 +157,24 @@ class PuntuacionsPares : AppCompatActivity() {
             }
         }
     }
-
-    private fun cargarHijosEnSpinner(familiaId: Int) {
+    private fun cargarUsuariosDeFamiliaEnSpinner(idFamilia: Int) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val apiService = TarickaliaApi().getApiService()
-                val responseUsuarios = apiService.getUsuariosByFamilia(familiaId)
+                val responseUsuarios = apiService.getUsuariosByFamilia(idFamilia)
+
                 if (responseUsuarios.isSuccessful) {
                     usuarios = responseUsuarios.body()
-                    val hijos = usuarios?.filter { !it.admin!! }
                     withContext(Dispatchers.Main) {
-                        val hijoNames = hijos?.map { it.nombreUsuario }
-                        if (hijoNames != null) {
-                            val adapter = ArrayAdapter(this@PuntuacionsPares, android.R.layout.simple_spinner_item, hijoNames)
-                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                            binding.nomfill.adapter = adapter
-                        }
+                        val usuarioNames = usuarios?.map { it.nombreUsuario } ?: listOf()
+                        val adapter = ArrayAdapter(this@PuntuacionsPares, android.R.layout.simple_spinner_item, usuarioNames)
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                        binding.nomfill.adapter = adapter
                     }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@PuntuacionsPares, "Error al cargar los hijos", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
-
-    private fun cargarTareas(usuarioId: Int) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val apiService = TarickaliaApi().getApiService()
-                val responseTareas = apiService.getTareas()
-                if (responseTareas.isSuccessful) {
-                    val tareas = responseTareas.body()?.filter { it.IdUsuario == usuarioId }
-                    withContext(Dispatchers.Main) {
-                        if (tareas != null) {
-                            val adapter = TareaAdapter(tareas)
-                            binding.recyclerView.adapter = adapter
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@PuntuacionsPares, "Error al cargar las tareas", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@PuntuacionsPares, "Error al cargar los usuarios", Toast.LENGTH_SHORT).show()
                 }
             }
         }

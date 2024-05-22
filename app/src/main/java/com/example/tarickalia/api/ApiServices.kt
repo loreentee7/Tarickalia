@@ -25,6 +25,8 @@ interface ApiServices {
     @DELETE("Familiums/{id}")
     suspend fun deleteFamilium(@Path("id") id: Int): Response<Void>
 
+
+
     // Recompensas
     @GET("Recompensas")
     suspend fun getRecompensas(): Response<List<Recompensa>>
@@ -86,4 +88,7 @@ interface ApiServices {
 
     @GET("Usuarios/familia/{idFamilia}")
     suspend fun getUsuariosByFamilia(@Path("idFamilia") idFamilia: Int): Response<List<Usuario>>
+
+    @PUT("api/Usuarios/{token}")
+    suspend fun resetPassword(@Path("token") token: String): Response<Void>
 }

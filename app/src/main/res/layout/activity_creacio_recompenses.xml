@@ -90,16 +90,17 @@
 
         <Spinner
             android:id="@+id/nomfamilia"
-            android:layout_width="158dp"
-            android:layout_height="48dp"
+            android:layout_width="166dp"
+            android:layout_height="37dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="124dp"
+            android:layout_marginEnd="128dp"
             android:layout_marginBottom="8dp"
+            android:background="#8836DF"
             android:spinnerMode="dropdown"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.391" />
+            app:layout_constraintVertical_bias="0.407" />
 
         <TextView
             android:layout_width="wrap_content"

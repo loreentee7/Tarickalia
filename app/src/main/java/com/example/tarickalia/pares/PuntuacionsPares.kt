@@ -33,7 +33,7 @@ class PuntuacionsPares : AppCompatActivity() {
     private var familias: List<Familium>? = null
     private var selectedFamilia: Familium? = null
     private var usuarios: List<Usuario>? = null
-
+    private var puntuacioAdapter: PuntuacioAdapter? = null
     private var tareas: List<Tarea>? = null
     private var tareaAdapter: TareaAdapter? = null
 
@@ -51,8 +51,8 @@ class PuntuacionsPares : AppCompatActivity() {
         cargarFamiliasEnSpinner()
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        tareaAdapter = TareaAdapter(mutableListOf<Tarea>())
-        binding.recyclerView.adapter = tareaAdapter
+        puntuacioAdapter = PuntuacioAdapter(mutableListOf<Tarea>(), usuarios)
+        binding.recyclerView.adapter = puntuacioAdapter
 
         binding.nomfamilia.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
@@ -69,7 +69,9 @@ class PuntuacionsPares : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val selectedHijoName = parent.getItemAtPosition(position).toString()
                 val selectedHijo = usuarios?.find { it.nombreUsuario == selectedHijoName }
-                binding.puntuacio.text = (selectedHijo?.Monedas ?: 0).toString()
+                binding.puntuacio.text = (selectedHijo?.monedas ?: 0).toString()
+                cargarPuntuacionHijo()
+                cargarTareasAprobadas()
 
 
             }
@@ -126,7 +128,10 @@ class PuntuacionsPares : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val selectedFamiliaName = parent.getItemAtPosition(position).toString()
                 selectedFamilia = familias?.find { it.nombre == selectedFamiliaName }
-                selectedFamilia?.id?.let { cargarUsuariosDeFamiliaEnSpinner(it) }
+                selectedFamilia?.id?.let {
+                    cargarUsuariosDeFamiliaEnSpinner(it)
+                    cargarTareasAprobadas()
+                }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -135,6 +140,7 @@ class PuntuacionsPares : AppCompatActivity() {
 
     }
 
+    // Funció per carregar les famílies disponibles des del servidor
     private fun cargarFamiliasEnSpinner() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -157,6 +163,8 @@ class PuntuacionsPares : AppCompatActivity() {
             }
         }
     }
+
+    // Funció per carregar els usuaris d'una família en el Spinner
     private fun cargarUsuariosDeFamiliaEnSpinner(idFamilia: Int) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -175,6 +183,34 @@ class PuntuacionsPares : AppCompatActivity() {
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     Toast.makeText(this@PuntuacionsPares, "Error al cargar los usuarios", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    // Funció per carregar la puntuació d'un fill
+    private fun cargarPuntuacionHijo() {
+        val selectedHijoName = binding.nomfill.selectedItem.toString()
+        val selectedHijo = usuarios?.find { it.nombreUsuario == selectedHijoName }
+        binding.puntuacio.text = (selectedHijo?.monedas ?: 0).toString()
+    }
+
+    // Funció per carregar les tasques aprovades
+    private fun cargarTareasAprobadas() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val apiService = TarickaliaApi().getApiService()
+                val responseTareas = apiService.getTareas()
+                if (responseTareas.isSuccessful) {
+                    val tareas = responseTareas.body()
+                    val tareasAprobadas = tareas?.filter { it.aprobada == true && it.idFamilia == selectedFamilia?.id }
+                    withContext(Dispatchers.Main) {
+                        puntuacioAdapter?.updateTareas(tareasAprobadas?.toMutableList())
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@PuntuacionsPares, "Error al cargar las tareas", Toast.LENGTH_SHORT).show()
                 }
             }
         }

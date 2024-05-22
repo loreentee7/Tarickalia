@@ -105,10 +105,11 @@
             android:id="@+id/recyclerView"
             android:layout_width="335dp"
             android:layout_height="412dp"
+            android:layout_marginTop="216dp"
             android:scrollbars="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="195dp" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

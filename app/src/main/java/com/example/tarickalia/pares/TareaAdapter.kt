@@ -8,12 +8,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tarickalia.api.Models.Tarea
 import com.example.tarickalia.R
+import com.example.tarickalia.api.Models.Usuario
 import com.example.tarickalia.api.TarickaliaApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class TareaAdapter(private var tasks: MutableList<Tarea>?) : RecyclerView.Adapter<TareaAdapter.TaskViewHolder>() {
+class TareaAdapter(private var tasks: MutableList<Tarea>?, private val usuario: Usuario, private val showButton: Boolean) : RecyclerView.Adapter<TareaAdapter.TaskViewHolder>() {
 
     class TaskViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val taskName: TextView = view.findViewById(R.id.nombreTarea)
@@ -32,6 +33,7 @@ class TareaAdapter(private var tasks: MutableList<Tarea>?) : RecyclerView.Adapte
         holder.taskName.text = task?.nombre
         holder.taskScore.text = task?.puntuacion.toString()
         holder.taskDueDate.text = task?.fechaCaducidad
+        holder.btnComplete.visibility = if (showButton) View.VISIBLE else View.GONE
 
         holder.btnComplete.setOnClickListener {
             task?.aprobada = true
@@ -39,6 +41,8 @@ class TareaAdapter(private var tasks: MutableList<Tarea>?) : RecyclerView.Adapte
             tasks?.removeAt(position)
             notifyItemRemoved(position)
             notifyItemRangeChanged(position, tasks?.size ?: 0)
+            usuario.monedas = (usuario.monedas ?: 0) + (task?.puntuacion ?: 0)
+            updateUser(usuario)
         }
     }
 
@@ -50,6 +54,13 @@ class TareaAdapter(private var tasks: MutableList<Tarea>?) : RecyclerView.Adapte
                 val apiService = TarickaliaApi().getApiService()
                 apiService.putTarea(it.id ?: 0, it)
             }
+        }
+    }
+
+    private fun updateUser(user: Usuario) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val apiService = TarickaliaApi().getApiService()
+            apiService.putUsuario(user.id ?: 0, user)
         }
     }
 

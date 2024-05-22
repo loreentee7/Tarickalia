@@ -86,5 +86,6 @@ class HomeFIlls : AppCompatActivity() {
         val usernamerebut = intent.getStringExtra("username")
         binding.nomfill.text = usernamerebut
 
+
     }
 }

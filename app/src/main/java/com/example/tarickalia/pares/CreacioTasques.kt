@@ -105,7 +105,7 @@ class CreacioTasques : AppCompatActivity() {
         }
 
 
-
+        // Configurem el spinner amb les dificultats
         val dificultades = arrayOf("Fàcil", "Normal", "Dificíl")
         val adapterDificultades = ArrayAdapter(this, android.R.layout.simple_spinner_item, dificultades)
         adapterDificultades.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -127,6 +127,7 @@ class CreacioTasques : AppCompatActivity() {
             }
         }
 
+        // Configura el botó per crear una nova tasca
         binding.btncrear.setOnClickListener {
             val nombreTarea = binding.nomtasca.text.toString()
             val familiaId = selectedFamilia?.id
@@ -185,16 +186,15 @@ class CreacioTasques : AppCompatActivity() {
         }
     }
 
+    // Funció per crear una nova tasca
     private fun crearTarea(tarea: Tarea) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val apiService = TarickaliaApi().getApiService()
-                // Obtén todas las tareas
                 val responseTareas = apiService.getTareas()
                 if (responseTareas.isSuccessful) {
                     val tareas = responseTareas.body()
 
-                    // Crea la nueva tarea
                     val response = apiService.createTask(tarea)
 
 
@@ -222,6 +222,7 @@ class CreacioTasques : AppCompatActivity() {
             }
         }
     }
+    // funcio per carregar les families en el spinner
     private fun cargarFamiliasEnSpinner() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -245,6 +246,7 @@ class CreacioTasques : AppCompatActivity() {
         }
     }
 
+    // funcio per carregar els usuaris de la familia en el spinner
     private fun cargarUsuariosDeFamiliaEnSpinner(idFamilia: Int) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -267,5 +269,4 @@ class CreacioTasques : AppCompatActivity() {
             }
         }
     }
-
 }

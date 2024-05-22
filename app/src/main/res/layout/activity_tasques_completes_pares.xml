@@ -90,11 +90,12 @@
 
         <Spinner
             android:id="@+id/nomfill"
-            android:layout_width="158dp"
-            android:layout_height="48dp"
+            android:layout_width="166dp"
+            android:layout_height="32dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="124dp"
             android:layout_marginBottom="8dp"
+            android:background="#8836DF"
             android:spinnerMode="dropdown"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -103,16 +104,17 @@
 
         <Spinner
             android:id="@+id/nomfamilia"
-            android:layout_width="158dp"
-            android:layout_height="48dp"
+            android:layout_width="168dp"
+            android:layout_height="34dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="124dp"
             android:layout_marginBottom="8dp"
+            android:background="#8836DF"
             android:spinnerMode="dropdown"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.268" />
+            app:layout_constraintVertical_bias="0.273" />
 
         <TextView
             android:layout_width="wrap_content"

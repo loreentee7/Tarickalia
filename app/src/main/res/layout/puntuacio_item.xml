@@ -6,42 +6,42 @@
     app:cardCornerRadius="16dp"
     app:cardBackgroundColor="#FFFFFF">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:padding="16dp">
 
         <TextView
             android:id="@+id/nombreTarea"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            app:layout_constraintEnd_toStartOf="@+id/puntuacionTarea"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/Puntuacio"
+            android:id="@+id/puntuacionTarea"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            app:layout_constraintEnd_toStartOf="@+id/nombreHijo"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/data"
+            android:id="@+id/nombreHijo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:textColor="#000000" />
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:textColor="#000000"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/puntuacionTarea" />
 
-        <Button
-            android:id="@+id/btnComplete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Completar"
-            android:backgroundTint="#4CAF50"
-            android:textColor="#FFFFFF" />
-
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

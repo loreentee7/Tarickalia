@@ -117,7 +117,7 @@ class TasquesCompletesPares : AppCompatActivity() {
             }
         }
     }
-
+    // funcio per carregar les families en el spinner
     private fun cargarFamiliasEnSpinner() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -141,6 +141,7 @@ class TasquesCompletesPares : AppCompatActivity() {
         }
     }
 
+    // funcio per carregar els usuaris de la familia seleccionada en el spinner
     private fun cargarUsuariosDeFamiliaEnSpinner(idFamilia: Int) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -164,6 +165,7 @@ class TasquesCompletesPares : AppCompatActivity() {
         }
     }
 
+    // funcio per carregar les tasques completes del fill seleccionat
     private fun loadTasks() {
         selectedChild?.let { child ->
             lifecycleScope.launch(Dispatchers.IO) {
@@ -173,13 +175,13 @@ class TasquesCompletesPares : AppCompatActivity() {
 
                     if (responseTareas.isSuccessful) {
                         val tareas = responseTareas.body()
-                        val completedTasks = tareas?.filter { it.completada == true }
+                        val completedTasks = tareas?.filter { it.completada == true && it.aprobada == null }
 
                         withContext(Dispatchers.Main) {
                             if (completedTasks.isNullOrEmpty()) {
                                 tareaAdapter?.updateTareas(mutableListOf())
                             } else {
-                                tareaAdapter = TareaAdapter(completedTasks.toMutableList())
+                                tareaAdapter = TareaAdapter(completedTasks.toMutableList(), selectedChild!!, true)
                                 binding.recyclerView.layoutManager = LinearLayoutManager(this@TasquesCompletesPares)
                                 binding.recyclerView.adapter = tareaAdapter
                             }

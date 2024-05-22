@@ -31,17 +31,18 @@ class CreacioRecompenses : AppCompatActivity() {
     private var selectedChild: Usuario? = null
     private var usuarios: List<Usuario>? = null
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCreacioRecompensesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Obtenim el nom d'usuari passat com a extra
         val usernamerebut = intent.getStringExtra("username")
         binding.nompares.text = usernamerebut
 
         drawerLayout = findViewById(R.id.drawer_layout)
 
+        // Configura el comportament del menú de navegació
         val navigationView: NavigationView = findViewById(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -75,18 +76,22 @@ class CreacioRecompenses : AppCompatActivity() {
             true
         }
 
+        // Configura el botó per tornar a la pantalla principal
         binding.gohome.setOnClickListener {
             val intent = Intent(this, HomePares::class.java)
             intent.putExtra("username", usernamerebut)
             startActivity(intent)
         }
 
+        // Configura el botó per obrir el menú de navegació
         binding.menuopen.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
         }
 
+        // Carrega les famílies disponibles al Spinner
         cargarFamiliasEnSpinner()
 
+        // Configura el comportament del Spinner quan es selecciona un element
         binding.nomfamilia.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val selectedFamiliaName = parent.getItemAtPosition(position).toString()
@@ -97,6 +102,7 @@ class CreacioRecompenses : AppCompatActivity() {
             }
         }
 
+        // Configura el botó per crear una nova recompensa
         binding.btncrear.setOnClickListener {
             val nombreRecompensa = binding.nomrecompensa.text.toString()
             val puntuacion = binding.puntuacio.text.toString().toInt()
@@ -109,18 +115,18 @@ class CreacioRecompenses : AppCompatActivity() {
                     if (responseRecompensas.isSuccessful) {
                         val recompensas = responseRecompensas.body()
                         var nuevaRecompensa = Recompensa(
-                            Nombre = nombreRecompensa,
-                            Puntuacion = puntuacion,
-                            Reclamada = false,
-                            IdFamilia = familiaId
+                            nombre = nombreRecompensa,
+                            puntuacion = puntuacion,
+                            reclamada = false,
+                            idFamilia = familiaId
                         )
                         var responseRecompensa = apiService.postRecompensa(nuevaRecompensa)
                         while (!responseRecompensa.isSuccessful && responseRecompensa.code() == 409) {
                             nuevaRecompensa = Recompensa(
-                                Nombre = nombreRecompensa,
-                                Puntuacion = puntuacion,
-                                Reclamada = false,
-                                IdFamilia = familiaId
+                                nombre = nombreRecompensa,
+                                puntuacion = puntuacion,
+                                reclamada = false,
+                                idFamilia = familiaId
                             )
                             responseRecompensa = apiService.postRecompensa(nuevaRecompensa)
                         }
@@ -139,10 +145,9 @@ class CreacioRecompenses : AppCompatActivity() {
                 Toast.makeText(this, "Por favor, selecciona una familia", Toast.LENGTH_SHORT).show()
             }
         }
-
-
     }
 
+    // Funció per carregar les famílies disponibles al Spinner
     private fun cargarFamiliasEnSpinner() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -166,6 +171,7 @@ class CreacioRecompenses : AppCompatActivity() {
         }
     }
 
+    // Funció per crear una nova recompensa
     private fun crearRecompensa(recompensa: Recompensa) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -188,7 +194,4 @@ class CreacioRecompenses : AppCompatActivity() {
             }
         }
     }
-
-
-
 }

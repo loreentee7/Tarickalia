@@ -2,11 +2,15 @@ package com.example.tarickalia.fills
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import com.example.tarickalia.fills.TasksAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tarickalia.databinding.ActivityTasquesCompletadesFillsBinding
 import com.example.tarickalia.R
 import com.example.tarickalia.api.TarickaliaApi
@@ -14,11 +18,15 @@ import com.example.tarickalia.databinding.ActivityTasquesFillsBinding
 import com.example.tarickalia.pares.HomePares
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class TasquesCompletadesFills : AppCompatActivity() {
 
     private lateinit var binding: ActivityTasquesCompletadesFillsBinding
     private lateinit var drawerLayout: DrawerLayout
+    private var userId: Int? = null
+    private lateinit var tasksAdapter: TasksAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTasquesCompletadesFillsBinding.inflate(layoutInflater)
@@ -26,6 +34,7 @@ class TasquesCompletadesFills : AppCompatActivity() {
 
         val usernamerebut = intent.getStringExtra("username")
         binding.nomfill.text = usernamerebut
+
 
         drawerLayout = findViewById(R.id.drawer_layout)
 
@@ -66,5 +75,36 @@ class TasquesCompletadesFills : AppCompatActivity() {
             drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
+
+        // consulta a la api per obtenir les tasques completes del fill
+        lifecycleScope.launch(Dispatchers.IO) {
+            val api = TarickaliaApi()
+            val usersResponse = api.getApiService().getUsuarios()
+            if (usersResponse.isSuccessful) {
+                val users = usersResponse.body()
+                val user = users?.find { it.nombreUsuario == usernamerebut }
+                userId = user?.id
+                if (userId != null) {
+                    val tasksResponse = api.getApiService().getTareasByUsuario(userId!!)
+                    if (tasksResponse.isSuccessful) {
+                        val tasks = tasksResponse.body()
+                        val completedTasks = tasks?.filter { it.completada == true}?.toMutableList()
+                        withContext(Dispatchers.Main) {
+                            tasksAdapter = TasksAdapter(completedTasks, lifecycleScope, false, true)
+                            binding.recyclerView.layoutManager = LinearLayoutManager(this@TasquesCompletadesFills)
+                            binding.recyclerView.adapter = tasksAdapter
+                        }
+                    } else {
+                        Log.e("TasquesFills", "Error obteniendo tareas: ${tasksResponse.errorBody()}")
+                    }
+                } else {
+                    Log.e("TasquesFills", "Usuario no encontrado")
+                }
+            } else {
+                Log.e("TasquesFills", "Error obteniendo usuarios: ${usersResponse.errorBody()}")
+            }
+        }
+
     }
+
 }

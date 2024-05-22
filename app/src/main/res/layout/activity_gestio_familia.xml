@@ -135,30 +135,33 @@
 
         <Spinner
             android:id="@+id/nomfill1"
-            android:layout_width="158dp"
-            android:layout_height="48dp"
+            android:layout_width="155dp"
+            android:layout_height="38dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="92dp"
+            android:layout_marginEnd="128dp"
             android:layout_marginBottom="8dp"
-            android:spinnerMode="dropdown"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.611" />
-
-        <Spinner
-            android:id="@+id/nomfamiliaspin"
-            android:layout_width="158dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="92dp"
-            android:layout_marginBottom="8dp"
+            android:background="#8836DF"
             android:spinnerMode="dropdown"
             android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.52" />
+            app:layout_constraintVertical_bias="0.596" />
+
+        <Spinner
+            android:id="@+id/nomfamiliaspin"
+            android:layout_width="155dp"
+            android:layout_height="38dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="128dp"
+            android:layout_marginBottom="8dp"
+            android:background="#8836DF"
+            android:spinnerMode="dropdown"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.518" />
 
         <Button
             android:id="@+id/assignarfills"

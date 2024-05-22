@@ -27,4 +27,8 @@
         <item name="android:layout_margin">5dp</item>
     </style>
 
+    <style name="MySpinnerStyle" parent="Widget.AppCompat.DropDownItem.Spinner">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
 </resources>

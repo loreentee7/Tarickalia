@@ -21,7 +21,7 @@ class TasquesFills : AppCompatActivity() {
     private lateinit var binding: ActivityTasquesFillsBinding
     private lateinit var drawerLayout: DrawerLayout
     private var userId: Int? = null
-    private var tasksAdapter = TasksAdapter(mutableListOf(), lifecycleScope)
+    private var tasksAdapter = TasksAdapter(mutableListOf(), lifecycleScope, true, false)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +75,7 @@ class TasquesFills : AppCompatActivity() {
             drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
-
+        // consulta a la api per obtenir les tasques de l'usuari
         lifecycleScope.launch(Dispatchers.IO) {
             val api = TarickaliaApi()
             val usersResponse = api.getApiService().getUsuarios()
@@ -89,7 +89,7 @@ class TasquesFills : AppCompatActivity() {
                         val tasks = tasksResponse.body()
                         val uncompletedTasks = tasks?.filter { it.completada?.let { !it } ?: false }?.toMutableList()
                         withContext(Dispatchers.Main) {
-                            tasksAdapter = TasksAdapter(uncompletedTasks, lifecycleScope)
+                            tasksAdapter = TasksAdapter(uncompletedTasks, lifecycleScope, true, false)
                             binding.recyclerView.layoutManager = LinearLayoutManager(this@TasquesFills)
                             binding.recyclerView.adapter = tasksAdapter
                         }

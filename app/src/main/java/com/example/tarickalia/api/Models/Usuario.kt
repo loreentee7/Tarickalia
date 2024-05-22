@@ -5,7 +5,7 @@ import java.util.Date
 data class Usuario(
     var id: Int? = null,
     var nombreUsuario: String? = null,
-    var Correo: String? = null,
+    var correo: String? = null,
     var contraseña: String? = null,
     var Nombre: String? = null,
     var Apellidos: String? = null,
@@ -13,7 +13,7 @@ data class Usuario(
     var admin: Boolean? = null,
     var genero: String? = null,
     var idFamilia: Int? = null,
-    var Monedas: Int? = null,
+    var monedas: Int? = null,
     var idFamiliaNavigation: Familium? = null,
     var tareas: List<Tarea>? = null
 )

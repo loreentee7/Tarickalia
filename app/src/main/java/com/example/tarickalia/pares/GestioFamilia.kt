@@ -76,6 +76,7 @@ class GestioFamilia : AppCompatActivity() {
             drawerLayout.openDrawer(GravityCompat.START)
         }
 
+        // Càrrega de les famílies i els fills disponibles
         loadFamilies()
         loadFills()
 
@@ -87,6 +88,8 @@ class GestioFamilia : AppCompatActivity() {
             assignFillToFamilia()
         }
     }
+
+    // Funció per carregar les famílies disponibles des del servidor
     private fun loadFamilies() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -115,6 +118,8 @@ class GestioFamilia : AppCompatActivity() {
             }
         }
     }
+
+    // Funció per carregar els fills disponibles des del servidor
     private fun loadFills() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -145,6 +150,8 @@ class GestioFamilia : AppCompatActivity() {
             }
         }
     }
+
+    // Funció per crear una nova família
     private fun createFamilia() {
         val familiaName = binding.nomfamilia.text?.toString()
         val nomusuari = binding.nompares.text.toString()
@@ -186,6 +193,8 @@ class GestioFamilia : AppCompatActivity() {
             }
         }
     }
+
+    // Funció per assignar un fill a una família
     private fun assignFillToFamilia() {
         val familiaName = binding.nomfamiliaspin.selectedItem.toString()
         val selectedChildName = binding.nomfill1.selectedItem.toString()

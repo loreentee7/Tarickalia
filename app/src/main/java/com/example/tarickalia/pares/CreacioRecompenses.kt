@@ -40,6 +40,11 @@ class CreacioRecompenses : AppCompatActivity() {
         val usernamerebut = intent.getStringExtra("username")
         binding.nompares.text = usernamerebut
 
+        val sharedPref = getSharedPreferences("MyPref", MODE_PRIVATE)
+        val familiaName = sharedPref.getString("familiaName", "")
+
+        binding.familiacarregada.text = familiaName
+
         drawerLayout = findViewById(R.id.drawer_layout)
 
         // Configura el comportament del menú de navegació
@@ -89,31 +94,25 @@ class CreacioRecompenses : AppCompatActivity() {
         }
 
         // Carrega les famílies disponibles al Spinner
-        cargarFamiliasEnSpinner()
-
-        // Configura el comportament del Spinner quan es selecciona un element
-        binding.nomfamilia.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                val selectedFamiliaName = parent.getItemAtPosition(position).toString()
-                selectedFamilia = familias?.find { it.nombre == selectedFamiliaName }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-            }
-        }
 
         // Configura el botó per crear una nova recompensa
         binding.btncrear.setOnClickListener {
             val nombreRecompensa = binding.nomrecompensa.text.toString()
             val puntuacion = binding.puntuacio.text.toString().toInt()
-            val familiaId = selectedFamilia?.id
 
-            if (familiaId != null) {
-                lifecycleScope.launch(Dispatchers.IO) {
-                    val apiService = TarickaliaApi().getApiService()
-                    val responseRecompensas = apiService.getRecompensas()
-                    if (responseRecompensas.isSuccessful) {
-                        val recompensas = responseRecompensas.body()
+            // Obtén el nombre de la familia de las preferencias compartidas
+            val sharedPref = getSharedPreferences("MyPref", MODE_PRIVATE)
+            val familiaName = sharedPref.getString("familiaName", "")
+
+            lifecycleScope.launch(Dispatchers.IO) {
+                val apiService = TarickaliaApi().getApiService()
+                val responseFamilias = apiService.getFamiliums()
+                if (responseFamilias.isSuccessful) {
+                    val familias = responseFamilias.body()
+                    // Busca la familia con el nombre correspondiente para obtener su ID
+                    val familiaId = familias?.find { it.nombre == familiaName }?.id
+
+                    if (familiaId != null) {
                         var nuevaRecompensa = Recompensa(
                             nombre = nombreRecompensa,
                             puntuacion = puntuacion,
@@ -139,33 +138,15 @@ class CreacioRecompenses : AppCompatActivity() {
                                 Toast.makeText(this@CreacioRecompenses, "Error al crear la recompensa", Toast.LENGTH_SHORT).show()
                             }
                         }
+                    } else {
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(this@CreacioRecompenses, "Familia no encontrada", Toast.LENGTH_SHORT).show()
+                        }
                     }
-                }
-            } else {
-                Toast.makeText(this, "Por favor, selecciona una familia", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    // Funció per carregar les famílies disponibles al Spinner
-    private fun cargarFamiliasEnSpinner() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val apiService = TarickaliaApi().getApiService()
-                val responseFamilias = apiService.getFamiliums()
-
-                if (responseFamilias.isSuccessful) {
-                    familias = responseFamilias.body()
+                } else {
                     withContext(Dispatchers.Main) {
-                        val familiaNames = familias?.map { it.nombre } ?: listOf()
-                        val adapter = ArrayAdapter(this@CreacioRecompenses, android.R.layout.simple_spinner_item, familiaNames)
-                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                        binding.nomfamilia.adapter = adapter
+                        Toast.makeText(this@CreacioRecompenses, "Error al cargar las familias", Toast.LENGTH_SHORT).show()
                     }
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@CreacioRecompenses, "Error al cargar las familias", Toast.LENGTH_SHORT).show()
                 }
             }
         }

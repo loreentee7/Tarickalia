@@ -88,20 +88,6 @@
             app:layout_constraintVertical_bias="0.069" />
 
 
-        <Spinner
-            android:id="@+id/nomfamilia"
-            android:layout_width="166dp"
-            android:layout_height="37dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="128dp"
-            android:layout_marginBottom="8dp"
-            android:background="#8836DF"
-            android:spinnerMode="dropdown"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.407" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -114,7 +100,7 @@
             app:layout_constraintHorizontal_bias="0.462"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.484" />
+            app:layout_constraintVertical_bias="0.426" />
 
         <EditText
             android:id="@+id/nomrecompensa"
@@ -137,7 +123,7 @@
             android:layout_width="188dp"
             android:layout_height="48dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="112dp"
+            android:layout_marginEnd="116dp"
             android:layout_marginBottom="8dp"
             android:hint="Puntuació"
             android:textColor="@color/white"
@@ -146,12 +132,13 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.539" />
+            app:layout_constraintVertical_bias="0.497" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Selecció de familia"
+            android:text="familia carregada"
+            android:id="@+id/familiacarregada"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"

@@ -98,7 +98,7 @@
         android:clickable="true"
         android:focusable="true"
         android:onClick="onForgotPasswordClick"
-        android:text="Has olvidat la teva contrasenya?"
+        android:text="@string/forgot_password"
         android:textColor="#808080"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

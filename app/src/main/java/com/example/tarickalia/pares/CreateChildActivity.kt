@@ -1,14 +1,19 @@
-package com.example.tarickalia
+package com.example.tarickalia.pares
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.RadioButton
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import com.example.tarickalia.MainActivity
+import com.example.tarickalia.R
 import com.example.tarickalia.api.Models.Usuario
 import com.example.tarickalia.api.TarickaliaApi
-import com.example.tarickalia.databinding.ActivityRegisterBinding
+import com.example.tarickalia.databinding.ActivityCreateChildBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -16,23 +21,48 @@ import kotlinx.coroutines.withContext
 import java.math.BigInteger
 import java.security.MessageDigest
 
-class Register : AppCompatActivity() {
+class CreateChildActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityRegisterBinding
+    private lateinit var binding: ActivityCreateChildBinding
+    private var parentId: Int? = null
+    var idFamilia: Int? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityRegisterBinding.inflate(layoutInflater)
+        binding = ActivityCreateChildBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Configura l'acció del botó de registre
-        binding.register.setOnClickListener() {
+        val username = intent.getStringExtra("username")
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            val apiService = TarickaliaApi().getApiService()
+            val response = apiService.getUsuarios()
+            if (response.isSuccessful) {
+                val usuarios = response.body()
+                val usuario = usuarios?.find { it.nombreUsuario == username }
+                parentId = usuario?.id
+                idFamilia = usuario?.idFamilia
+            }
+        }
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            val apiService = TarickaliaApi().getApiService()
+            val response = apiService.getUsuarios()
+            if (response.isSuccessful) {
+                val usuarios = response.body()
+                val usuario = usuarios?.find { it.nombreUsuario == username }
+                parentId = usuario?.id
+            }
+        }
+
+        binding.submitButton.setOnClickListener() {
             // Obtenim el text dels camps
             val nombreUsuario = binding.username.text.toString()
             val contrasena = binding.password.text.toString()
-            val confirmarContrasena = binding.confirmarpassword.text.toString()
-            val nom = binding.nom.text.toString()
+            val confirmarContrasena = binding.confirmPassword.text.toString()
+            val nom = binding.nombre.text.toString()
             val correu = binding.email.text.toString()
-            val cognoms = binding.cognom.text.toString()
+            val cognoms = binding.apellidos.text.toString()
             val genero = if (binding.genere.isChecked) "Mujer" else "Hombre"
 
             // Comprovem si les contrasenyes coincideixen
@@ -48,11 +78,13 @@ class Register : AppCompatActivity() {
             val usuario = Usuario(
                 nombreUsuario = nombreUsuario,
                 contraseña = contrasenaCifrada,
-                admin = true,
+                admin = false,
                 correo = correu,
                 Nombre = nom,
                 Apellidos = cognoms,
-                genero = genero
+                genero = genero,
+                idFamilia = idFamilia
+
             )
 
             // Iniciem una nova tasca en segon pla
@@ -68,24 +100,22 @@ class Register : AppCompatActivity() {
                     withContext(Dispatchers.Main) {
                         if (response.isSuccessful) {
                             // Si la resposta és exitosa, mostrem un missatge i naveguem a la pantalla principal
-                            Toast.makeText(this@Register, "Usuario creat correctament", Toast.LENGTH_SHORT).show()
-                            startActivity(Intent(this@Register, MainActivity::class.java))
+                            Toast.makeText(this@CreateChildActivity, "Usuario creat correctament", Toast.LENGTH_SHORT).show()
+                            finish()
                         } else {
                             // Si la resposta no és exitosa, mostrem un missatge d'error
-                            Toast.makeText(this@Register, "Error al crear l'usuari", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@CreateChildActivity, "Error al crear l'usuari", Toast.LENGTH_SHORT).show()
                         }
                     }
                 } catch (e: Exception) {
                     // Si es produeix una excepció, mostrem un missatge d'error
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(this@Register, "Error al crear l'usuari", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@CreateChildActivity, "Error al crear l'usuari", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
         }
     }
-
-    // Funció d'extensió per convertir una cadena a SHA256
     fun String.toSHA256(): String {
         val md = MessageDigest.getInstance("SHA-256")
         val fullHash = BigInteger(1, md.digest(toByteArray())).toString(16).padStart(64, '0')

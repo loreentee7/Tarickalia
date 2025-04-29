@@ -15,13 +15,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import android.graphics.Color
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class TasksAdapter(private val tasks: MutableList<Tarea>?, private val lifecycleScope: CoroutineScope, private val showButton: Boolean, private val colorTasks: Boolean) : RecyclerView.Adapter<TasksAdapter.TaskViewHolder>() {
 
     class TaskViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val taskName: TextView = view.findViewById(R.id.nombreTarea)
         val taskScore: TextView = view.findViewById(R.id.Puntuacio)
-        val taskDueDate: TextView = view.findViewById(R.id.data)
         val btnComplete: Button = view.findViewById(R.id.btnComplete)
     }
 
@@ -34,37 +35,39 @@ class TasksAdapter(private val tasks: MutableList<Tarea>?, private val lifecycle
         val task = tasks?.get(position)
         holder.taskName.text = task?.nombre
         holder.taskScore.text = task?.puntuacion.toString()
-        holder.taskDueDate.text = task?.fechaCaducidad
         holder.btnComplete.visibility = if (showButton) View.VISIBLE else View.GONE
 
-        if (colorTasks) {
-            if (task?.aprobada == true) {
-                holder.itemView.setBackgroundColor(Color.GREEN)
-            } else {
-                holder.itemView.setBackgroundColor(Color.YELLOW)
+
+            holder.btnComplete.visibility = if (showButton) View.VISIBLE else View.GONE
+
+            if (colorTasks) {
+                if (task?.aprobada == true) {
+                    holder.itemView.setBackgroundColor(Color.GREEN)
+                } else {
+                    holder.itemView.setBackgroundColor(Color.YELLOW)
+                }
             }
-        }
 
-        holder.btnComplete.setOnClickListener {
-            task?.let {
-                lifecycleScope.launch(Dispatchers.IO) {
-                    val apiService = TarickaliaApi().getApiService()
-                    val updatedTask = it.copy(completada = true)
-                    val response = apiService.putTarea(it.id!!, updatedTask)
+            holder.btnComplete.setOnClickListener {
+                task?.let {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        val apiService = TarickaliaApi().getApiService()
+                        val updatedTask = it.copy(completada = true)
+                        val response = apiService.putTarea(it.id!!, updatedTask)
 
-                    if (response.isSuccessful) {
-                        withContext(Dispatchers.Main) {
-                            removeTask(position)
-                            Toast.makeText(holder.itemView.context, "Tarea completada", Toast.LENGTH_SHORT).show()
-                        }
-                    } else {
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(holder.itemView.context, "Error al completar la tarea", Toast.LENGTH_SHORT).show()
+                        if (response.isSuccessful) {
+                            withContext(Dispatchers.Main) {
+                                removeTask(position)
+                                Toast.makeText(holder.itemView.context, "Tarea completada", Toast.LENGTH_SHORT).show()
+                            }
+                        } else {
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(holder.itemView.context, "Error al completar la tarea", Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
                 }
             }
-        }
     }
 
     override fun getItemCount() = tasks?.size ?: 0

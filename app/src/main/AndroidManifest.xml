@@ -15,6 +15,9 @@
         android:theme="@style/Theme.Tarickalia"
         tools:targetApi="31">
         <activity
+            android:name=".pares.CreateChildActivity"
+            android:exported="false" />
+        <activity
             android:name=".fills.RecompensesFills"
             android:exported="false" />
         <activity

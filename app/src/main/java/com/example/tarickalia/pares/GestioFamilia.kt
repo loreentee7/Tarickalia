@@ -2,6 +2,7 @@ package com.example.tarickalia.pares
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
@@ -22,6 +23,9 @@ class GestioFamilia : AppCompatActivity() {
 
     private lateinit var binding: ActivityGestioFamiliaBinding
     private lateinit var drawerLayout: DrawerLayout
+    private var idFamilia: Int? = null
+    var isFamilyCreated = false
+    private var familias: List<Familium>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,78 +80,24 @@ class GestioFamilia : AppCompatActivity() {
             drawerLayout.openDrawer(GravityCompat.START)
         }
 
-        // Càrrega de les famílies i els fills disponibles
-        loadFamilies()
-        loadFills()
 
         binding.crearfamilia.setOnClickListener {
-            createFamilia()
-        }
-
-        binding.assignarfills.setOnClickListener {
-            assignFillToFamilia()
-        }
-    }
-
-    // Funció per carregar les famílies disponibles des del servidor
-    private fun loadFamilies() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val apiService = TarickaliaApi().getApiService()
-                val response = apiService.getFamiliums()
-
-                withContext(Dispatchers.Main) {
-                    if (response.isSuccessful) {
-                        val familias = response.body()
-                        val familiaNombres = familias?.map { it.nombre }
-
-                        val spinner: Spinner = findViewById(R.id.nomfamiliaspin)
-                        familiaNombres?.let {
-                            val adapter = ArrayAdapter(this@GestioFamilia, android.R.layout.simple_spinner_item, it)
-                                spinner.adapter = adapter
-                        }
-
-                    } else {
-                        Toast.makeText(this@GestioFamilia, "Error al cargar las familias", Toast.LENGTH_SHORT).show()
-                    }
+            if (!isFamilyCreated) {
+                lifecycleScope.launch {
+                    createFamilia()
+                    isFamilyCreated = true
+                    val familiaName = binding.nomfamilia.text.toString()
                 }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@GestioFamilia, "Error al cargar las familias", Toast.LENGTH_SHORT).show()
-                }
+            } else {
+                Toast.makeText(this, "Ya has creado una familia", Toast.LENGTH_SHORT).show()
             }
         }
-    }
 
-    // Funció per carregar els fills disponibles des del servidor
-    private fun loadFills() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val apiService = TarickaliaApi().getApiService()
-                val response = apiService.getUsuarios()
-
-                withContext(Dispatchers.Main) {
-                    if (response.isSuccessful) {
-                        val usuarios = response.body()
-                        val noAdmins = usuarios?.filter { it.admin == false }
-                        val noAdminUsernames = noAdmins?.map { it.nombreUsuario }
-
-
-                        val spinner: Spinner = findViewById(R.id.nomfill1)
-                        noAdminUsernames?.let {
-                            val adapter = ArrayAdapter(this@GestioFamilia, android.R.layout.simple_spinner_item, it)
-                            spinner.adapter = adapter
-                        }
-
-                    } else {
-                        Toast.makeText(this@GestioFamilia, "Error al cargar los usuarios", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@GestioFamilia, "Error al cargar los usuarios", Toast.LENGTH_SHORT).show()
-                }
-            }
+        binding.crearfills.setOnClickListener {
+            val intent = Intent(this, CreateChildActivity::class.java)
+            intent.putExtra("username", binding.nompares.text.toString())
+            intent.putExtra("idFamilia", idFamilia)
+            startActivity(intent)
         }
     }
 
@@ -164,16 +114,35 @@ class GestioFamilia : AppCompatActivity() {
                     val usuarios = responseUsuarios.body()
                     val usuario = usuarios?.find { it.nombreUsuario == nomusuari }
                     if (usuario != null) {
-                        val newFamilia = Familium(nombre = familiaName, usuarios = listOf(usuario.copy(id = null)))
+                        val newFamilia = Familium(nombre = familiaName)
                         val responseFamilia = apiService.postFamilium(newFamilia)
+                        if (responseFamilia.isSuccessful) {
+                            val createdFamilia = responseFamilia.body()
+                            idFamilia = createdFamilia?.id
 
+                            // Actualiza el usuario para que su idFamilia sea el id de la nueva familia
+                            val usuarioToUpdate = usuario.copy(idFamilia = idFamilia)
+                            val responseUpdateUsuario = apiService.putUsuario(usuario.id!!, usuarioToUpdate)
+                            if (responseUpdateUsuario.isSuccessful) {
+                                withContext(Dispatchers.Main) {
+                                    Toast.makeText(this@GestioFamilia, "Usuario añadido a la familia con éxito", Toast.LENGTH_SHORT).show()
+                                }
+                            } else {
+                                withContext(Dispatchers.Main) {
+                                    Toast.makeText(this@GestioFamilia, "Error al añadir el usuario a la familia", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
                         withContext(Dispatchers.Main) {
                             if (responseFamilia.isSuccessful) {
-                                Toast.makeText(this@GestioFamilia, "Error al crear la familia", Toast.LENGTH_SHORT).show()
-
-                            } else {
                                 Toast.makeText(this@GestioFamilia, "Familia creada con éxito", Toast.LENGTH_SHORT).show()
-                                loadFamilies()
+                                binding.familyname.text = familiaName
+                                val familiaName = binding.nomfamilia.text.toString()
+                                val sharedPref = getSharedPreferences("MyPref", MODE_PRIVATE)
+                                val editor = sharedPref.edit()
+                                editor.putString("familiaName", familiaName)
+                                editor.apply()
+                            } else {
                             }
                         }
                     } else {
@@ -194,44 +163,4 @@ class GestioFamilia : AppCompatActivity() {
         }
     }
 
-    // Funció per assignar un fill a una família
-    private fun assignFillToFamilia() {
-        val familiaName = binding.nomfamiliaspin.selectedItem.toString()
-        val selectedChildName = binding.nomfill1.selectedItem.toString()
-
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val apiService = TarickaliaApi().getApiService()
-
-                val responseFamilias = apiService.getFamiliums()
-                if (responseFamilias.isSuccessful) {
-                    val familias = responseFamilias.body()
-                    val selectedFamilia = familias?.find { it.nombre == familiaName }
-
-                    val responseUsuarios = apiService.getUsuarios()
-                    if (responseUsuarios.isSuccessful) {
-                        val usuarios = responseUsuarios.body()
-                        val selectedUsuario = usuarios?.find { it.nombreUsuario == selectedChildName }
-
-                        if (selectedFamilia != null && selectedUsuario != null) {
-                            selectedUsuario.idFamilia = selectedFamilia.id
-
-                            val responseUpdateUsuario = apiService.putUsuario(selectedUsuario.id!!, selectedUsuario)
-                            withContext(Dispatchers.Main) {
-                                if (responseUpdateUsuario.isSuccessful) {
-                                    Toast.makeText(this@GestioFamilia, "Usuario asignado a la familia con éxito", Toast.LENGTH_SHORT).show()
-                                } else {
-                                    Toast.makeText(this@GestioFamilia, "Error al asignar el usuario a la familia", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@GestioFamilia, "Error al asignar el usuario a la familia", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
 }

@@ -2,6 +2,7 @@ package com.example.tarickalia.pares
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -86,6 +87,71 @@ class TasquesCompletesPares : AppCompatActivity() {
             drawerLayout.openDrawer(GravityCompat.START)
         }
 
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val apiService = TarickaliaApi().getApiService()
+
+                // Obtén el nombre de la familia de las preferencias compartidas
+                val sharedPref = getSharedPreferences("MyPref", MODE_PRIVATE)
+                val familiaName = sharedPref.getString("familiaName", "")
+                Log.d("CreacioTasques", "familiaName: $familiaName")
+
+                // Busca la familia con ese nombre en la API
+                val responseFamilias = apiService.getFamiliums()
+                if (responseFamilias.isSuccessful) {
+                    val familias = responseFamilias.body()
+                    Log.d("CreacioTasques", "familias: $familias")
+                    val familia = familias?.find { it.nombre == familiaName }
+                    val idFamilia = familia?.id
+                    Log.d("CreacioTasques", "idFamilia: $idFamilia")
+
+                    if (idFamilia != null) {
+                        // Obtén la lista de usuarios de esa familia
+                        val responseUsuarios = apiService.getUsuariosByFamilia(idFamilia)
+                        if (responseUsuarios.isSuccessful) {
+                            usuarios = responseUsuarios.body()
+                            Log.d("CreacioTasques", "usuarios cargados: $usuarios")
+
+                            // Filtra la lista para obtener solo los usuarios que no son administradores
+                            val hijos = usuarios?.filter { !it.admin!! }
+                            withContext(Dispatchers.Main) {
+                                if (!hijos.isNullOrEmpty()) {
+                                    val hijosNoNulos = hijos.filterNotNull()
+                                    val adapter = ArrayAdapter(this@TasquesCompletesPares, android.R.layout.simple_spinner_item, hijosNoNulos.map { it.nombreUsuario })
+                                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                                    binding.nomfill.adapter = adapter
+                                } else {
+                                    Log.d("CreacioTasques", "No hay usuarios para mostrar en el spinner")
+                                    Toast.makeText(this@TasquesCompletesPares, "No hay usuarios disponibles", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        } else {
+                            Log.d("CreacioTasques", "Error en la llamada a getUsuariosByFamilia: ${responseUsuarios.errorBody()}")
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(this@TasquesCompletesPares, "Error al cargar los usuarios", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    } else {
+                        // Maneja el caso en que no se encuentra la familia
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(this@TasquesCompletesPares, "Familia no encontrada", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } else {
+                    // Maneja el caso en que la llamada a la API de familias falla
+                    Log.d("CreacioTasques", "Error en la llamada a getFamiliums: ${responseFamilias.errorBody()}")
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@TasquesCompletesPares, "Error al cargar las familias", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                Log.d("CreacioTasques", "Exception: ${e.message}")
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@TasquesCompletesPares, "Error al cargar los datos", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
         binding.gohome.setOnClickListener {
             val intent = Intent(this, HomePares::class.java)
             intent.putExtra("username", usernamerebut)
@@ -95,17 +161,7 @@ class TasquesCompletesPares : AppCompatActivity() {
         cargarFamiliasEnSpinner()
 
 
-        binding.nomfamilia.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                val selectedFamiliaName = parent.getItemAtPosition(position).toString()
-                selectedFamilia = familias?.find { it.nombre == selectedFamiliaName }
-                selectedFamilia?.id?.let { cargarUsuariosDeFamiliaEnSpinner(it) }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-            }
-        }
-
+        // comportament del spinner amb element seleccionat
         binding.nomfill.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val selectedChildName = parent.getItemAtPosition(position).toString()
@@ -122,15 +178,23 @@ class TasquesCompletesPares : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val apiService = TarickaliaApi().getApiService()
+                val responseUsuarios = apiService.getUsuarios()
                 val responseFamilias = apiService.getFamiliums()
 
-                if (responseFamilias.isSuccessful) {
-                    familias = responseFamilias.body()
+                if (responseUsuarios.isSuccessful && responseFamilias.isSuccessful) {
+                    val usuarios = responseUsuarios.body()
+                    val familias = responseFamilias.body()
+
+                    // Get the username of the logged-in user (father)
+                    val padreUsername = binding.nompares.text.toString()
+                    // Find the user object that matches the username of the logged-in user
+                    val padre = usuarios?.find { it.nombreUsuario == padreUsername }
+                    // Get the ID of the logged-in user
+                    val padreId = padre?.id
+
+                } else {
                     withContext(Dispatchers.Main) {
-                        val familiaNames = familias?.map { it.nombre } ?: listOf()
-                        val adapter = ArrayAdapter(this@TasquesCompletesPares, android.R.layout.simple_spinner_item, familiaNames)
-                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                        binding.nomfamilia.adapter = adapter
+                        Toast.makeText(this@TasquesCompletesPares, "Error al cargar las familias", Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: Exception) {

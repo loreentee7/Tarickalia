@@ -103,21 +103,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.38" />
 
-        <Spinner
-            android:id="@+id/nomfamilia"
-            android:layout_width="158dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="124dp"
-            android:layout_marginBottom="8dp"
-            android:spinnerMode="dropdown"
-            android:textColor="#FFFFFF"
-            android:background="#8836DF"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.268" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -175,7 +160,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Selecció de familia"
+            android:id="@+id/nomfamilia"
+            android:text="family name"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -183,17 +169,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.227" />
+            app:layout_constraintVertical_bias="0.271" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="337dp"
             android:layout_height="246dp"
-            android:layout_marginTop="196dp"
+            android:layout_marginTop="444dp"
             android:scrollbars="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nomfamilia" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -27,6 +27,7 @@ interface ApiServices {
 
 
 
+
     // Recompensas
     @GET("Recompensas")
     suspend fun getRecompensas(): Response<List<Recompensa>>

@@ -2,6 +2,7 @@ package com.example.tarickalia.pares
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -34,6 +35,7 @@ class CreacioTasques : AppCompatActivity() {
     private var usuarios: List<Usuario>? = null
     private var selectedDate: Date? = null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCreacioTasquesBinding.inflate(layoutInflater)
@@ -41,6 +43,12 @@ class CreacioTasques : AppCompatActivity() {
 
         val usernamerebut = intent.getStringExtra("username")
         binding.nompares.text = usernamerebut
+
+        val sharedPref = getSharedPreferences("MyPref", MODE_PRIVATE)
+        val familiaName = sharedPref.getString("familiaName", "")
+
+        binding.nomfamilia.text = familiaName
+
 
         val navigationView: NavigationView = findViewById(com.example.tarickalia.R.id.nav_view)
         navigationView.setNavigationItemSelectedListener { menuItem ->
@@ -85,16 +93,68 @@ class CreacioTasques : AppCompatActivity() {
             drawerLayout.openDrawer(GravityCompat.START)
         }
 
-        cargarFamiliasEnSpinner()
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val apiService = TarickaliaApi().getApiService()
 
-        binding.nomfamilia.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                val selectedFamiliaName = parent.getItemAtPosition(position).toString()
-                selectedFamilia = familias?.find { it.nombre == selectedFamiliaName }
-                selectedFamilia?.id?.let { cargarUsuariosDeFamiliaEnSpinner(it) }
-            }
+                // Obtén el nombre de la familia de las preferencias compartidas
+                val sharedPref = getSharedPreferences("MyPref", MODE_PRIVATE)
+                val familiaName = sharedPref.getString("familiaName", "")
+                Log.d("CreacioTasques", "familiaName: $familiaName")
 
-            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Busca la familia con ese nombre en la API
+                val responseFamilias = apiService.getFamiliums()
+                if (responseFamilias.isSuccessful) {
+                    val familias = responseFamilias.body()
+                    Log.d("CreacioTasques", "familias: $familias")
+                    val familia = familias?.find { it.nombre == familiaName }
+                    val idFamilia = familia?.id
+                    Log.d("CreacioTasques", "idFamilia: $idFamilia")
+
+                    if (idFamilia != null) {
+                        // Obtén la lista de usuarios de esa familia
+                        val responseUsuarios = apiService.getUsuariosByFamilia(idFamilia)
+                        if (responseUsuarios.isSuccessful) {
+                            usuarios = responseUsuarios.body()
+                            Log.d("CreacioTasques", "usuarios cargados: $usuarios")
+
+                            // Filtra la lista para obtener solo los usuarios que no son administradores
+                            val hijos = usuarios?.filter { !it.admin!! }
+                            withContext(Dispatchers.Main) {
+                                if (!hijos.isNullOrEmpty()) {
+                                    val hijosNoNulos = hijos.filterNotNull()
+                                    val adapter = ArrayAdapter(this@CreacioTasques, android.R.layout.simple_spinner_item, hijosNoNulos.map { it.nombreUsuario })
+                                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                                    binding.nomfill.adapter = adapter
+                                } else {
+                                    Log.d("CreacioTasques", "No hay usuarios para mostrar en el spinner")
+                                    Toast.makeText(this@CreacioTasques, "No hay usuarios disponibles", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        } else {
+                            Log.d("CreacioTasques", "Error en la llamada a getUsuariosByFamilia: ${responseUsuarios.errorBody()}")
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(this@CreacioTasques, "Error al cargar los usuarios", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    } else {
+                        // Maneja el caso en que no se encuentra la familia
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(this@CreacioTasques, "Familia no encontrada", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } else {
+                    // Maneja el caso en que la llamada a la API de familias falla
+                    Log.d("CreacioTasques", "Error en la llamada a getFamiliums: ${responseFamilias.errorBody()}")
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@CreacioTasques, "Error al cargar las familias", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                Log.d("CreacioTasques", "Exception: ${e.message}")
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@CreacioTasques, "Error al cargar los datos", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
@@ -103,7 +163,6 @@ class CreacioTasques : AppCompatActivity() {
             calendar.set(year, month, dayOfMonth)
             selectedDate = calendar.time
         }
-
 
         // Configurem el spinner amb les dificultats
         val dificultades = arrayOf("Fàcil", "Normal", "Dificíl")
@@ -132,16 +191,21 @@ class CreacioTasques : AppCompatActivity() {
             val nombreTarea = binding.nomtasca.text.toString()
             val familiaId = selectedFamilia?.id
             val hijoSeleccionado = binding.nomfill.selectedItem.toString()
+            Log.d("CreacioTasques", "hijoSeleccionado: $hijoSeleccionado")
+            Log.d("CreacioTasques", "usuarios: $usuarios")
             val dificultadSeleccionada = binding.dificultat.selectedItem.toString()
             val puntuacion = binding.puntuacio.text.toString().toInt()
-
-            val usuarioSeleccionado = usuarios?.find { it.nombreUsuario == hijoSeleccionado }
+            val usuarioSeleccionado = usuarios?.find { it.nombreUsuario?.toLowerCase() == hijoSeleccionado.toLowerCase() }
+            Log.d("CreacioTasques", "usuarioSeleccionado: $usuarioSeleccionado")
             val usuarioId = usuarioSeleccionado?.id
+            Log.d("CreacioTasques", "usuarioId: $usuarioId")
+
+
 
             val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
             val fechaCaducidadString = selectedDate?.let { dateFormat.format(it) }
 
-            if (familiaId != null && usuarioId != null) {
+            if (usuarioId != null) {
                 lifecycleScope.launch(Dispatchers.IO) {
                     val apiService = TarickaliaApi().getApiService()
                     val responseTareas = apiService.getTareas()
@@ -222,51 +286,5 @@ class CreacioTasques : AppCompatActivity() {
             }
         }
     }
-    // funcio per carregar les families en el spinner
-    private fun cargarFamiliasEnSpinner() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val apiService = TarickaliaApi().getApiService()
-                val responseFamilias = apiService.getFamiliums()
 
-                if (responseFamilias.isSuccessful) {
-                    familias = responseFamilias.body()
-                    withContext(Dispatchers.Main) {
-                        val familiaNames = familias?.map { it.nombre } ?: listOf()
-                        val adapter = ArrayAdapter(this@CreacioTasques, android.R.layout.simple_spinner_item, familiaNames)
-                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                        binding.nomfamilia.adapter = adapter
-                    }
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@CreacioTasques, "Error al cargar las familias", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
-
-    // funcio per carregar els usuaris de la familia en el spinner
-    private fun cargarUsuariosDeFamiliaEnSpinner(idFamilia: Int) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val apiService = TarickaliaApi().getApiService()
-                val responseUsuarios = apiService.getUsuariosByFamilia(idFamilia)
-
-                if (responseUsuarios.isSuccessful) {
-                    usuarios = responseUsuarios.body()
-                    withContext(Dispatchers.Main) {
-                        val usuarioNames = usuarios?.map { it.nombreUsuario } ?: listOf()
-                        val adapter = ArrayAdapter(this@CreacioTasques, android.R.layout.simple_spinner_item, usuarioNames)
-                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                        binding.nomfill.adapter = adapter
-                    }
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@CreacioTasques, "Error al cargar los usuarios", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
 }

@@ -8,17 +8,17 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:padding="16dp">
 
         <TextView
             android:id="@+id/nombreRecompensa"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:textColor="#000000"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="#000000"
-            app:layout_constraintEnd_toStartOf="@+id/puntuacionRecompensa"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,20 +26,22 @@
             android:id="@+id/puntuacionRecompensa"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
             android:textColor="#000000"
-            app:layout_constraintEnd_toStartOf="@+id/botonReclamar"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nombreRecompensa" />
 
         <Button
             android:id="@+id/botonReclamar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Reclamar"
             android:backgroundTint="#4CAF50"
+            android:text="Reclamar"
             android:textColor="#FFFFFF"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/puntuacionRecompensa" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

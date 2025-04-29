@@ -101,20 +101,34 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.198" />
 
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Assignar Fills"
+            android:text="Creació i assignacio fills"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.451" />
+            app:layout_constraintVertical_bias="0.512" />
 
+        <TextView
+            android:id="@+id/familyname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="family name"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.501"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.426" />
 
         <EditText
             android:id="@+id/nomfamilia"
@@ -133,58 +147,27 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.256" />
 
-        <Spinner
-            android:id="@+id/nomfill1"
-            android:layout_width="155dp"
-            android:layout_height="38dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="128dp"
-            android:layout_marginBottom="8dp"
-            android:background="#8836DF"
-            android:spinnerMode="dropdown"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.596" />
-
-        <Spinner
-            android:id="@+id/nomfamiliaspin"
-            android:layout_width="155dp"
-            android:layout_height="38dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="128dp"
-            android:layout_marginBottom="8dp"
-            android:background="#8836DF"
-            android:spinnerMode="dropdown"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.518" />
-
         <Button
-            android:id="@+id/assignarfills"
+            android:id="@+id/crearfills"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
-            android:text="Assignar Fill"
+            android:text="Crea Fills"
             android:textColor="@color/black"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.519"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.705" />
+            app:layout_constraintVertical_bias="0.578" />
 
         <Button
             android:id="@+id/crearfamilia"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
             android:text="Crea Familia"
             android:textColor="@color/black"
-            android:backgroundTint="@color/white"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -193,9 +176,9 @@
             app:layout_constraintVertical_bias="0.342" />
 
         <ImageView
-            android:layout_width="211dp"
-            android:layout_height="146dp"
-            android:layout_marginBottom="16dp"
+            android:layout_width="171dp"
+            android:layout_height="99dp"
+            android:layout_marginBottom="4dp"
             android:src="@drawable/whiteloho"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
